@@ -5,6 +5,8 @@ package lk.ijse.gdse63.springfinal.service.impl;
 
 import lk.ijse.gdse63.springfinal.dto.UserDTO;
 import lk.ijse.gdse63.springfinal.entity.User;
+import lk.ijse.gdse63.springfinal.exception.DeleteFailException;
+import lk.ijse.gdse63.springfinal.exception.UpdateFailException;
 import lk.ijse.gdse63.springfinal.exception.UserNotFoundException;
 import lk.ijse.gdse63.springfinal.repo.UserRepo;
 import lk.ijse.gdse63.springfinal.service.UserService;
@@ -56,6 +58,30 @@ public class UserServiceImpl implements UserService {
         }catch (Exception e){
             throw new UserNotFoundException("User Not Found");
         }
+    }
+
+    @Override
+    public void updateUser(UserDTO email) throws UpdateFailException {
+        try {
+            User user = modelMapper.map(email, User.class);
+            userRepo.save(user);
+        }catch (Exception e){
+            throw new UpdateFailException("Operation Failed",e);
+        }
+    }
+
+    @Override
+    public void deleteUser(String email) throws DeleteFailException {
+        try {
+            userRepo.deleteByEmail(email);
+        }catch (Exception e){
+            throw new DeleteFailException("Operation Failed",e);
+        }
+    }
+
+    @Override
+    public List<UserDTO> getAll(String email) throws UserNotFoundException {
+        return null;
     }
 
     ArrayList<String> jsonStringToArray(String jsonString) throws JSONException {

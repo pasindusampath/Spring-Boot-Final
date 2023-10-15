@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
 public class UserDTO {
     private int id;
@@ -19,6 +18,13 @@ public class UserDTO {
     private String email;
     private LocalDate birthday;
     private ArrayList<String> nicImgs;
+    private ArrayList<String> roles;
     private String gender;
     private String remarks;
+
+    public UserDTO(){
+        roles = new ArrayList<>();
+        roles.add("user");
+    }
+
 }

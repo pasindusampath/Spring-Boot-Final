@@ -1,0 +1,30 @@
+//////////////////////////////////////////////////////////////////////
+Post Mapping JS Request
+//////////////////////////////////////////////////////////////////////
+var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  "id": 1,
+  "username": "john_doe",
+  "password": "password123",
+  "usernic": "JD123456",
+  "contact": "555-555-5555",
+  "email": "john@example.com",
+  "birthday": "1990-01-01",
+  "nicImg": [
+    "nic_front.jpg",
+    "nic_back.jpg"
+  ],
+  "gender": "Male",
+  "remarks": "Some remarks here"
+});
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+//////////////////////////////////////////////////////////////////////

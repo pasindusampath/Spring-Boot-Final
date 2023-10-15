@@ -18,7 +18,7 @@ public class UserDTO {
     private String contact;
     private String email;
     private LocalDate birthday;
-    private ArrayList<String> nicImg;
+    private ArrayList<String> nicImgs;
     private String gender;
     private String remarks;
 }

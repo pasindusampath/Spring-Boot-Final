@@ -5,6 +5,6 @@ public class UpdateFailException extends Exception{
         super(message);
     }
     public UpdateFailException(String message, Throwable cause) {
-        super(message, cause);
+        super(message+" :( "+ cause.getMessage(), cause);
     }
 }

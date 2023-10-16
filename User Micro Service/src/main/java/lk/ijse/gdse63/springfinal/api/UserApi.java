@@ -6,6 +6,10 @@ import lk.ijse.gdse63.springfinal.dto.UserDTO;
 import lk.ijse.gdse63.springfinal.dto.sec.ErrorRes;
 import lk.ijse.gdse63.springfinal.dto.sec.LoginReq;
 import lk.ijse.gdse63.springfinal.dto.sec.LoginRes;
+import lk.ijse.gdse63.springfinal.exception.CreateFailException;
+import lk.ijse.gdse63.springfinal.exception.DeleteFailException;
+import lk.ijse.gdse63.springfinal.exception.UpdateFailException;
+import lk.ijse.gdse63.springfinal.exception.UserNotFoundException;
 import lk.ijse.gdse63.springfinal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -49,25 +55,69 @@ public class UserApi {
         }
     }
 
-    @GetMapping(value = "/{id:\\d+}")
-    public ResponseEntity search(@PathVariable String id) {
-        System.out.println("Search Pressed" + id);
-        return new ResponseEntity("Search Pressed" + id, HttpStatus.OK);
+    @GetMapping(value = "/{id:\\d+}/{email}" )
+    public ResponseEntity search(@PathVariable String email){
+        try {
+            UserDTO userDTO = userService.searchUserByEmail(email);
+            return ResponseEntity.ok(userDTO);
+        } catch (UserNotFoundException e) {
+            ErrorRes errorResponse = new ErrorRes(HttpStatus.NOT_FOUND, e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
     }
 
-    @PostMapping
-    public void save(@RequestBody UserDTO userDTO){
-        System.out.println("Save Pressed : " + userDTO);
+    @PostMapping(value = "/{id:\\d+}", consumes = "multipart/form-data")
+    public ResponseEntity<UserDTO> save(@RequestPart(value = "profilePic",required = false) byte[] profilePic,
+                                        @RequestPart(value = "userName")String userName,
+                                        @RequestPart(value = "password") String password,
+                                        @RequestPart(value = "contact") String contact,
+                                        @RequestPart(value = "email") String email,
+                                        @RequestPart(value = "birthday") String birthday,
+                                        @RequestPart(value = "nicFront") byte[] nicFront,
+                                        @RequestPart(value = "nicRear") byte[] nicRear,
+                                        @RequestPart(value = "gender") String gender,
+                                        @RequestPart(value = "nicNo") String nicNo
+    ){
+        try {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUsername(userName);
+            userDTO.setPassword(password);
+            userDTO.setContact(contact);
+            userDTO.setEmail(email);
+            userDTO.setUsernic(nicNo);
+            //userDTO.setBirthday(birthday);
+            userDTO.setGender(gender);
+            userDTO.setNicFrontByte(nicFront);
+            userDTO.setNicRearByte(nicRear);
+            userDTO.setProfilePicByte(profilePic);
+
+
+            int id = userService.addUsers(userDTO);
+            userDTO.setId(id);
+            return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+        } catch (CreateFailException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 
-    @PutMapping
-    public void update(@RequestBody UserDTO userDTO){
-        System.out.println("Update Pressed : "+userDTO);
+    @PutMapping(value = "/{id:\\d+}")
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO){
+        try {
+            userService.updateUser(userDTO);
+            return new ResponseEntity<>(userDTO,HttpStatus.OK);
+        } catch (UpdateFailException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping(value = "/{id:\\d+}")
-    public void delete(@PathVariable int id){
-        System.out.println("Delete Pressed : "+id);
+    public ResponseEntity delete(@RequestBody UserDTO userDTO){
+        try {
+            userService.deleteUser(userDTO.getEmail());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (DeleteFailException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

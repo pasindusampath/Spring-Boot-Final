@@ -1,4 +1,4 @@
-package com.example.hotel_micro_service;
+package lk.ijse.gdse63.hotel_micro_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

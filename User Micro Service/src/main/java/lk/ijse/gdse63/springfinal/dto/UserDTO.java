@@ -17,10 +17,16 @@ public class UserDTO {
     private String contact;
     private String email;
     private LocalDate birthday;
-    private ArrayList<String> nicImgs;
+    private String nicFront;
+    private String nicRear;
     private ArrayList<String> roles;
     private String gender;
     private String remarks;
+    private String profilePic;
+
+    private byte []profilePicByte;
+    private byte[] nicFrontByte;
+    private byte[] nicRearByte;
 
     public UserDTO(){
         roles = new ArrayList<>();

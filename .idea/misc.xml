@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
@@ -8,6 +9,7 @@
       <list>
         <option value="$PROJECT_DIR$/User Micro Service/pom.xml" />
         <option value="$PROJECT_DIR$/Authenticate Micro Service/pom.xml" />
+        <option value="$PROJECT_DIR$/Hotel Micro Service/pom.xml" />
       </list>
     </option>
   </component>

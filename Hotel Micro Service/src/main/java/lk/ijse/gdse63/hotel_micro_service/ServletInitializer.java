@@ -1,4 +1,4 @@
-package com.example.hotel_micro_service;
+package lk.ijse.gdse63.hotel_micro_service;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

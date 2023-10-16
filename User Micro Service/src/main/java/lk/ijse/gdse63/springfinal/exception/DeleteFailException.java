@@ -6,7 +6,7 @@ public class DeleteFailException extends Exception{
     }
 
     public DeleteFailException(String message, Throwable cause) {
-        super(message, cause);
+        super(message+" :( "+ cause.getMessage(), cause);
     }
 
 }

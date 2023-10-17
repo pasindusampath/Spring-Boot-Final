@@ -48,19 +48,6 @@ public class HotelApi {
                                       @RequestParam("prices") ArrayList<PricesDTO> prices,
                                       @RequestParam("remarks") String remarks) {
 
-        //Map<String,Object> result = new ObjectMapper().readValue(filtersString, HashMap.class);
-
-        System.out.println(files.length);
-        System.out.println(name);
-        System.out.println(category);
-        System.out.println(petAllowed);
-        System.out.println(mapLink);
-        System.out.println(address);
-        System.out.println(phone);
-        System.out.println(email);
-        System.out.println(prices);
-        System.out.println(remarks);
-
         HotelDTO hotelDTO = new HotelDTO();
         hotelDTO.setName(name);
         hotelDTO.setCategory(category);
@@ -72,14 +59,6 @@ public class HotelApi {
         hotelDTO.setPrices(prices);
         hotelDTO.setRemarks(remarks);
 
-        /*Arrays.asList(files)
-                .stream()
-                .forEach(file -> fileService.uploadFile(file));
-
-        redirectAttributes.addFlashAttribute("message",
-                "You successfully uploaded all files!");
-
-        return "redirect:/";*/
         return new ResponseEntity(1, HttpStatus.CREATED);
     }
 
@@ -96,17 +75,6 @@ public class HotelApi {
                        @RequestParam("prices") ArrayList<PricesDTO> prices,
                        @RequestParam("remarks") String remarks){
 
-        System.out.println(files.length);
-        System.out.println(id);
-        System.out.println(name);
-        System.out.println(category);
-        System.out.println(petAllowed);
-        System.out.println(mapLink);
-        System.out.println(address);
-        System.out.println(phone);
-        System.out.println(email);
-        System.out.println(prices);
-        System.out.println(remarks);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

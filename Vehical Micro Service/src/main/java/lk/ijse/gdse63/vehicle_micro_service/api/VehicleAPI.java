@@ -56,13 +56,29 @@ public class VehicleAPI {
         return new ResponseEntity("Vehicle", HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity updateVehicle(){
+    @PutMapping("/{id:\\d+}")
+    public ResponseEntity updateVehicle(@PathVariable int id,
+                                        @RequestParam String vehicleName,
+                                        @RequestParam String fuelType,
+                                        @RequestParam boolean isHybrid,
+                                        @RequestParam MultipartFile[] files,
+                                        @RequestParam double priceFor1Km,
+                                        @RequestParam double fuelUsage,
+                                        @RequestParam double priceFor100Km,
+                                        @RequestParam int noOfSeats,
+                                        @RequestParam String vehicleType,
+                                        @RequestParam String category,
+                                        @RequestParam String transmission,
+                                        @RequestParam String driverName,
+                                        @RequestParam String nicNo,
+                                        @RequestParam String contactNO,
+                                        @RequestParam MultipartFile[] licenceImages,
+                                        @RequestParam String remarks){
         return new ResponseEntity("Vehicle", HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public ResponseEntity deleteVehicle(){
+    @DeleteMapping("/{id:\\d+}")
+    public ResponseEntity deleteVehicle(@PathVariable int id){
         return new ResponseEntity("Vehicle", HttpStatus.OK);
     }
 

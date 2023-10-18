@@ -127,19 +127,19 @@ public class UserServiceImpl implements UserService {
 
         InputStream is = new ByteArrayInputStream(userDTO.getProfilePicByte());
         BufferedImage bi = ImageIO.read(is);
-        File outputfile = new File("images/pro_pic/"+dt+ ".jpg");
+        File outputfile = new File("images/user/pro_pic/"+dt+ ".jpg");
         ImageIO.write(bi, "jpg", outputfile);
         user.setProfilePic(outputfile.getAbsolutePath());
 
         InputStream is1 = new ByteArrayInputStream(userDTO.getNicFrontByte());
         BufferedImage bi1 = ImageIO.read(is1);
-        File outputfile1 = new File("images/nic_front/"+dt+ ".jpg");
+        File outputfile1 = new File("images/user/nic_front/"+dt+ ".jpg");
         ImageIO.write(bi1, "jpg", outputfile1);
         user.setNicFrontImg(outputfile1.getAbsolutePath());
 
         InputStream is2 = new ByteArrayInputStream(userDTO.getNicRearByte());
         BufferedImage bi2 = ImageIO.read(is2);
-        File outputfile2 = new File("images/nic_rear/"+dt+ ".jpg");
+        File outputfile2 = new File("images/user/nic_rear/"+dt+ ".jpg");
         ImageIO.write(bi2, "jpg", outputfile2);
         user.setNicRearImg(outputfile2.getAbsolutePath());
     }

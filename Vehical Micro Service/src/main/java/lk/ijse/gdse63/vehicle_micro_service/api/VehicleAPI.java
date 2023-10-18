@@ -2,26 +2,38 @@ package lk.ijse.gdse63.vehicle_micro_service.api;
 
 import lk.ijse.gdse63.vehicle_micro_service.dto.DriverDTO;
 import lk.ijse.gdse63.vehicle_micro_service.dto.VehicleDTO;
+import lk.ijse.gdse63.vehicle_micro_service.service.VehicleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Stream;
+
 @RestController
 @RequestMapping("/api/v1/vehicle")
 public class VehicleAPI {
+    VehicleService vehicleService;
+
+    public VehicleAPI(VehicleService vehicleService) {
+        this.vehicleService = vehicleService;
+    }
+
     @GetMapping("/{id:\\d+}")
-    public ResponseEntity searchVehicle(@PathVariable String id){
-        VehicleDTO vehicleDTO = new VehicleDTO();
-        DriverDTO driverDTO = new DriverDTO();
+    public ResponseEntity searchVehicle(@PathVariable String id) {
+
         return new ResponseEntity("Vehicle", HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity addVehicle(@RequestParam String vehicleName,
                                      @RequestParam String fuelType,
                                      @RequestParam boolean isHybrid,
-                                     @RequestParam MultipartFile[] files,
+                                     @RequestParam ArrayList<MultipartFile> files,
                                      @RequestParam double priceFor1Km,
                                      @RequestParam double fuelUsage,
                                      @RequestParam double priceFor100Km,
@@ -32,28 +44,44 @@ public class VehicleAPI {
                                      @RequestParam String driverName,
                                      @RequestParam String nicNo,
                                      @RequestParam String contactNO,
-                                     @RequestParam MultipartFile[] licenceImages,
-                                     @RequestParam String remarks){
+                                     @RequestPart byte[] licenceImageFront,
+                                     @RequestPart byte[] licenceImageRear,
+                                     @RequestParam String remarks) {
 
-        System.out.println("Vehicle Name : "+vehicleName);
-        System.out.println("Fuel Type : "+fuelType);
-        System.out.println("Is Hybrid : "+isHybrid);
-        System.out.println("Files : "+files.length);
-        System.out.println("Price For 1 Km : "+priceFor1Km);
-        System.out.println("Fuel Usage : "+fuelUsage);
-        System.out.println("Price For 100 Km : "+priceFor100Km);
-        System.out.println("No Of Seats : "+noOfSeats);
-        System.out.println("Vehicle Type : "+vehicleType);
-        System.out.println("Category : "+category);
-        System.out.println("Transmission : "+transmission);
-        System.out.println("Driver Name : "+driverName);
-        System.out.println("NIC No : "+nicNo);
-        System.out.println("Contact No : "+contactNO);
-        System.out.println("Licence Images : "+licenceImages.length);
-        System.out.println("Remarks : "+remarks);
+        VehicleDTO vehicleDTO = new VehicleDTO();
+        DriverDTO driverDTO = new DriverDTO();
+        ArrayList<byte[]> objects = new ArrayList<>();
+        files.stream().forEach(file -> {
+            try {
+                objects.add(file.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        vehicleDTO.setDriverDTO(driverDTO);
+        vehicleDTO.setName(vehicleName);
+        vehicleDTO.setFuelType(fuelType);
+        vehicleDTO.setHybrid(isHybrid);
+        vehicleDTO.setPriceFor1Km(priceFor1Km);
+        vehicleDTO.setFuelUsage(fuelUsage);
+        vehicleDTO.setPriceFor100Km(priceFor100Km);
+        vehicleDTO.setSeatCapacity(noOfSeats);
+        vehicleDTO.setVehicleType(vehicleType);
+        vehicleDTO.setCategory(category);
+        vehicleDTO.setTransmission(transmission);
+        vehicleDTO.setImages(objects);
+        driverDTO.setName(driverName);
+        driverDTO.setNic(nicNo);
+        driverDTO.setContact(contactNO);
+        driverDTO.setLicenseImageFront(licenceImageFront);
+        driverDTO.setLicenseImageRear(licenceImageRear);
+        driverDTO.setRemarks(remarks);
+
+        int i = vehicleService.saveVehicle(vehicleDTO);
 
 
-        return new ResponseEntity("Vehicle", HttpStatus.CREATED);
+        return new ResponseEntity(i, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id:\\d+}")
@@ -73,12 +101,12 @@ public class VehicleAPI {
                                         @RequestParam String nicNo,
                                         @RequestParam String contactNO,
                                         @RequestParam MultipartFile[] licenceImages,
-                                        @RequestParam String remarks){
+                                        @RequestParam String remarks) {
         return new ResponseEntity("Vehicle", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id:\\d+}")
-    public ResponseEntity deleteVehicle(@PathVariable int id){
+    public ResponseEntity deleteVehicle(@PathVariable int id) {
         return new ResponseEntity("Vehicle", HttpStatus.OK);
     }
 

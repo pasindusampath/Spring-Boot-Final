@@ -19,7 +19,7 @@ public class GuideDTO {
     private String experience;
     private byte[] guideIdFront;
     private byte[] guideIdRear;
-    private byte[] NicFront;
-    private byte[] NicRear;
+    private byte[] nicFront;
+    private byte[] nicRear;
     private byte[] profilePic;
 }

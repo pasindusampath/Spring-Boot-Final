@@ -21,4 +21,7 @@ public class VehicleDTO {
     private int seatCapacity;
     private String vehicleType;
     private String category;
+    private String transmission;
+
+    private DriverDTO driverDTO;
 }

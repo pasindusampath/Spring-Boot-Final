@@ -1,4 +1,4 @@
-package lk.ijse.gdse63.springfinal;
+package lk.ijse.gdse63.springfinal.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

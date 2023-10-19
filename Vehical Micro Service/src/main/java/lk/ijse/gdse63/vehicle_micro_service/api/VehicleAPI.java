@@ -2,6 +2,7 @@ package lk.ijse.gdse63.vehicle_micro_service.api;
 
 import lk.ijse.gdse63.vehicle_micro_service.dto.DriverDTO;
 import lk.ijse.gdse63.vehicle_micro_service.dto.VehicleDTO;
+import lk.ijse.gdse63.vehicle_micro_service.exception.NotFoundException;
 import lk.ijse.gdse63.vehicle_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.vehicle_micro_service.service.VehicleService;
 import org.springframework.http.HttpStatus;
@@ -25,9 +26,13 @@ public class VehicleAPI {
     }
 
     @GetMapping("/{id:\\d+}")
-    public ResponseEntity searchVehicle(@PathVariable String id) {
-
-        return new ResponseEntity("Vehicle", HttpStatus.OK);
+    public ResponseEntity searchVehicle(@PathVariable int id) {
+        try {
+            VehicleDTO vehicleDTO = vehicleService.searchVehicle(id);
+            return new ResponseEntity(vehicleDTO, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity("Not Found", HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping(consumes = "multipart/form-data")

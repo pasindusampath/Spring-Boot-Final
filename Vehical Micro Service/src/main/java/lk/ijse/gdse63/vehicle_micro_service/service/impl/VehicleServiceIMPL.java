@@ -6,6 +6,7 @@ import lk.ijse.gdse63.vehicle_micro_service.dto.DriverDTO;
 import lk.ijse.gdse63.vehicle_micro_service.dto.VehicleDTO;
 import lk.ijse.gdse63.vehicle_micro_service.entity.Driver;
 import lk.ijse.gdse63.vehicle_micro_service.entity.Vehicle;
+import lk.ijse.gdse63.vehicle_micro_service.exception.DeleteFailException;
 import lk.ijse.gdse63.vehicle_micro_service.exception.NotFoundException;
 import lk.ijse.gdse63.vehicle_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.vehicle_micro_service.exception.UpdatefailException;
@@ -108,6 +109,21 @@ public class VehicleServiceIMPL implements VehicleService {
         }catch (Exception e){
             e.printStackTrace();
             throw new UpdatefailException("Update Fail",e);
+        }
+    }
+
+    @Override
+    public void deleteVehicle(int id) throws NotFoundException, DeleteFailException {
+        try {
+            Optional<Driver> byId = driverRepo.findById(id);
+            if (byId.isPresent()){
+                deleteImages(byId);
+                vehicleRepo.deleteById(id);
+            }else {
+                throw new NotFoundException("Vehicle Not Found");
+            }
+        }catch (Exception e){
+            throw new DeleteFailException("Delete Fail",e);
         }
     }
 

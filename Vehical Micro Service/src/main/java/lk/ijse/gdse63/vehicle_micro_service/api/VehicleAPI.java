@@ -2,6 +2,7 @@ package lk.ijse.gdse63.vehicle_micro_service.api;
 
 import lk.ijse.gdse63.vehicle_micro_service.dto.DriverDTO;
 import lk.ijse.gdse63.vehicle_micro_service.dto.VehicleDTO;
+import lk.ijse.gdse63.vehicle_micro_service.exception.DeleteFailException;
 import lk.ijse.gdse63.vehicle_micro_service.exception.NotFoundException;
 import lk.ijse.gdse63.vehicle_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.vehicle_micro_service.exception.UpdatefailException;
@@ -159,7 +160,13 @@ public class VehicleAPI {
 
     @DeleteMapping("/{id:\\d+}")
     public ResponseEntity deleteVehicle(@PathVariable int id) {
-        return new ResponseEntity("Vehicle", HttpStatus.OK);
+
+        try {
+            vehicleService.deleteVehicle(id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (DeleteFailException | NotFoundException e) {
+            return new ResponseEntity("Operation Fail", HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping("/{category:^Regular|Mid-level|Luxury|Super Luxury$}")

@@ -2,10 +2,13 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Authenticate Micro Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Authenticate Micro Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Guide Micro Service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Guide Micro Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Hotel Micro Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Hotel Micro Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/User Micro Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/User Micro Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Vehical Micro Service/src/main/java" charset="UTF-8" />
   </component>
 </project>

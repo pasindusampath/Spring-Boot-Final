@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lk.ijse.gdse63.hotel_micro_service.dto.HotelDTO;
 import lk.ijse.gdse63.hotel_micro_service.entity.Hotel;
+import lk.ijse.gdse63.hotel_micro_service.exception.DeleteFailException;
+import lk.ijse.gdse63.hotel_micro_service.exception.NotFoundException;
 import lk.ijse.gdse63.hotel_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.hotel_micro_service.exception.UpdateFailException;
 import lk.ijse.gdse63.hotel_micro_service.repo.HotelRepo;
@@ -13,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -63,6 +62,41 @@ public class HotelServiceIMPL implements HotelService {
         }
     }
 
+    @Override
+    public void delete(int id) throws DeleteFailException, NotFoundException {
+        try {
+            Optional<Hotel> byId = hotelRepo.findById(id);
+            if (byId.isPresent()){
+                deleteImages(byId);
+                hotelRepo.deleteById(id);
+            }else {
+                throw new NotFoundException("Hotel Not Found");
+            }
+        }catch (NotFoundException e){
+            throw e;
+        }catch (Exception e){
+            throw new DeleteFailException("Delete Fail ",e);
+        }
+
+    }
+
+    @Override
+    public HotelDTO search(int id) throws NotFoundException {
+        try {
+            Optional<Hotel> byId = hotelRepo.findById(id);
+            if (byId.isPresent()){
+                HotelDTO hotel = modelMapper.map(byId.get(), HotelDTO.class);
+                importImages(hotel,byId.get());
+                return hotel;
+            }else {
+                throw new NotFoundException("Hotel Not Found");
+            }
+        } catch (Exception e) {
+            throw new NotFoundException("Error Occurred :(",e);
+        }
+    }
+
+
     public void exportImages(HotelDTO hotelDTO, Hotel hotel) {
         ArrayList<byte[]> images = hotelDTO.getImages();
         String dt = LocalDate.now().toString().replace("-", "_") + "__"
@@ -104,4 +138,20 @@ public class HotelServiceIMPL implements HotelService {
             }
         }
     }
+
+    public void importImages(HotelDTO hotelDTO,Hotel hotel) throws IOException {
+        String images = hotel.getImages();
+        hotelDTO.setImages(new ArrayList<>());
+        if (images != null){
+            ArrayList<String> imageList = gson.fromJson(images, new TypeToken<ArrayList<String>>(){}.getType());
+            for (int i = 0; i < imageList.size(); i++) {
+                BufferedImage r = ImageIO.read(new File(imageList.get(i)));
+                ByteArrayOutputStream b = new ByteArrayOutputStream();
+                ImageIO.write(r, "jpg", b);
+                byte[] imgData= b.toByteArray();
+                hotelDTO.getImages().add(imgData);
+            }
+        }
+    }
+
 }

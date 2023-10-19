@@ -1,10 +1,12 @@
 package lk.ijse.gdse63.vehicle_micro_service.service.impl;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lk.ijse.gdse63.vehicle_micro_service.dto.DriverDTO;
 import lk.ijse.gdse63.vehicle_micro_service.dto.VehicleDTO;
 import lk.ijse.gdse63.vehicle_micro_service.entity.Driver;
 import lk.ijse.gdse63.vehicle_micro_service.entity.Vehicle;
+import lk.ijse.gdse63.vehicle_micro_service.exception.NotFoundException;
 import lk.ijse.gdse63.vehicle_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.vehicle_micro_service.repo.DriverRepo;
 import lk.ijse.gdse63.vehicle_micro_service.repo.VehicleRepo;
@@ -14,13 +16,11 @@ import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class VehicleServiceIMPL implements VehicleService {
@@ -49,6 +49,24 @@ public class VehicleServiceIMPL implements VehicleService {
         }
         //exportImages(dto);
 
+    }
+
+    @Override
+    public VehicleDTO searchVehicle(int id) throws NotFoundException {
+        try {
+            Optional<Vehicle> byId = vehicleRepo.findById(id);
+            if (byId.isPresent()){
+                VehicleDTO vehicle = modelMapper.map(byId.get(), VehicleDTO.class);
+                DriverDTO driver = modelMapper.map(byId.get().getDriver(), DriverDTO.class);
+                vehicle.setDriverDTO(driver);
+                importImages(vehicle,byId.get().getDriver(),byId.get());
+                return vehicle;
+            }else {
+                throw new NotFoundException("Vehicle Not Found");
+            }
+        } catch ( Exception e ) {
+            throw new NotFoundException("Vehicle Not Found",e);
+        }
     }
 
     public void exportImages(VehicleDTO vehicleDTO, Driver driver, Vehicle vehicle) {
@@ -100,4 +118,32 @@ public class VehicleServiceIMPL implements VehicleService {
 
     }
 
+
+
+    public void importImages(VehicleDTO vehicleDTO, Driver driver, Vehicle vehicle) throws IOException {
+        BufferedImage read = ImageIO.read(new File(driver.getLicenseImageFront()));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(read, "jpg", baos);
+        byte[] bytes = baos.toByteArray();
+        vehicleDTO.getDriverDTO().setLicenseImageFront(bytes);
+
+        BufferedImage read1 = ImageIO.read(new File(driver.getLicenseImageRear()));
+        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+        ImageIO.write(read1, "jpg", baos1);
+        byte[] bytes1 = baos1.toByteArray();
+        vehicleDTO.getDriverDTO().setLicenseImageRear(bytes1);
+
+
+        String images = vehicle.getImages();
+        vehicleDTO.setImages(new ArrayList<>());
+        ArrayList<String> imageList = gson.fromJson(images, new TypeToken<ArrayList<String>>() {});
+        for (int i = 0; i < imageList.size(); i++) {
+            BufferedImage r = ImageIO.read(new File(driver.getLicenseImageRear()));
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            ImageIO.write(r, "jpg", b);
+            byte[] imgData= b.toByteArray();
+            vehicleDTO.getImages().add(imgData);
+        }
+
+    }
 }

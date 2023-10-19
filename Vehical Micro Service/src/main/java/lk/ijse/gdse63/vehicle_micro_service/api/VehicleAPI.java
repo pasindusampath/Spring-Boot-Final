@@ -2,6 +2,7 @@ package lk.ijse.gdse63.vehicle_micro_service.api;
 
 import lk.ijse.gdse63.vehicle_micro_service.dto.DriverDTO;
 import lk.ijse.gdse63.vehicle_micro_service.dto.VehicleDTO;
+import lk.ijse.gdse63.vehicle_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.vehicle_micro_service.service.VehicleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,10 +79,14 @@ public class VehicleAPI {
         driverDTO.setLicenseImageRear(licenceImageRear);
         driverDTO.setRemarks(remarks);
 
-        int i = vehicleService.saveVehicle(vehicleDTO);
+        int i = 0;
+        try {
+            i = vehicleService.saveVehicle(vehicleDTO);
+            return new ResponseEntity(i, HttpStatus.CREATED);
+        } catch (SaveFailException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.CONFLICT);
+        }
 
-
-        return new ResponseEntity(i, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id:\\d+}")

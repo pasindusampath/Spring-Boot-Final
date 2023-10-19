@@ -1,6 +1,7 @@
 package lk.ijse.gdse63.hotel_micro_service.service.impl;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lk.ijse.gdse63.hotel_micro_service.dto.HotelDTO;
 import lk.ijse.gdse63.hotel_micro_service.entity.Hotel;
 import lk.ijse.gdse63.hotel_micro_service.exception.SaveFailException;
@@ -19,6 +20,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class HotelServiceIMPL implements HotelService {
@@ -46,7 +48,19 @@ public class HotelServiceIMPL implements HotelService {
 
     @Override
     public void update(HotelDTO hotelDTO) throws UpdateFailException {
-
+        try {
+            Optional<Hotel> byId = hotelRepo.findById(hotelDTO.getId());
+            if (byId.isPresent()){
+                deleteImages(byId);
+                Hotel map = modelMapper.map(hotelDTO, Hotel.class);
+                map.setPhone(gson.toJson(hotelDTO.getPhone()));
+                map.setPrices(gson.toJson(hotelDTO.getPrices()));
+                exportImages(hotelDTO,map);
+                hotelRepo.save(map);
+            }
+        }catch (Exception e){
+            throw new UpdateFailException("Update Fail ",e);
+        }
     }
 
     public void exportImages(HotelDTO hotelDTO, Hotel hotel) {
@@ -72,5 +86,22 @@ public class HotelServiceIMPL implements HotelService {
         hotel.setImages(gson.toJson(pathList));
 
 
+    }
+
+    private void deleteImages(Optional<Hotel> byId) {
+        if (byId.isPresent()){
+            if (byId.isPresent()){
+                Hotel hotel = byId.get();
+                String images = hotel.getImages();
+                if (images != null){
+                    ArrayList<String> pathList = gson.fromJson(images, new TypeToken<ArrayList<String>>(){}.getType());
+                    for (String path : pathList) {
+                        File file = new File(path);
+                        boolean delete = file.delete();
+                        System.out.println("Images " + delete);
+                    }
+                }
+            }
+        }
     }
 }

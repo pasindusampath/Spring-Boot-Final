@@ -20,6 +20,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -66,6 +67,24 @@ public class VehicleServiceIMPL implements VehicleService {
             }
         } catch ( Exception e ) {
             throw new NotFoundException("Vehicle Not Found",e);
+        }
+    }
+
+    @Override
+    public List<VehicleDTO> searchByCategory(String category) throws NotFoundException {
+        ArrayList<VehicleDTO> objects = new ArrayList<>();
+        try {
+            List<Vehicle> byCategory = vehicleRepo.findByCategory(category);
+            for (Vehicle vehicle : byCategory) {
+                VehicleDTO vehicleDTO = modelMapper.map(vehicle, VehicleDTO.class);
+                DriverDTO driverDTO = modelMapper.map(vehicle.getDriver(), DriverDTO.class);
+                vehicleDTO.setDriverDTO(driverDTO);
+                importImages(vehicleDTO,vehicle.getDriver(),vehicle);
+                objects.add(vehicleDTO);
+            }
+            return objects;
+        }catch (Exception e){
+            throw new NotFoundException("Vehicles Not Found",e);
         }
     }
 

@@ -20,5 +20,6 @@ public class HotelDTO {
     private ArrayList<String> phone;
     private String email;
     private ArrayList<PricesDTO> prices;
+    private ArrayList<byte[]> images;
     private String remarks;
 }

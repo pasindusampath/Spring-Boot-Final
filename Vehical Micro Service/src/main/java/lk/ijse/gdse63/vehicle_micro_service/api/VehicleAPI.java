@@ -4,6 +4,7 @@ import lk.ijse.gdse63.vehicle_micro_service.dto.DriverDTO;
 import lk.ijse.gdse63.vehicle_micro_service.dto.VehicleDTO;
 import lk.ijse.gdse63.vehicle_micro_service.exception.NotFoundException;
 import lk.ijse.gdse63.vehicle_micro_service.exception.SaveFailException;
+import lk.ijse.gdse63.vehicle_micro_service.exception.UpdatefailException;
 import lk.ijse.gdse63.vehicle_micro_service.service.VehicleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -95,12 +96,12 @@ public class VehicleAPI {
 
     }
 
-    @PutMapping("/{id:\\d+}")
+    @PutMapping("/{id:\\d+}/{did:\\d+}")
     public ResponseEntity updateVehicle(@PathVariable int id,
                                         @RequestParam String vehicleName,
                                         @RequestParam String fuelType,
                                         @RequestParam boolean isHybrid,
-                                        @RequestParam MultipartFile[] files,
+                                        @RequestParam ArrayList<MultipartFile> files,
                                         @RequestParam double priceFor1Km,
                                         @RequestParam double fuelUsage,
                                         @RequestParam double priceFor100Km,
@@ -108,12 +109,52 @@ public class VehicleAPI {
                                         @RequestParam String vehicleType,
                                         @RequestParam String category,
                                         @RequestParam String transmission,
+                                        @PathVariable int did,
                                         @RequestParam String driverName,
                                         @RequestParam String nicNo,
                                         @RequestParam String contactNO,
-                                        @RequestParam MultipartFile[] licenceImages,
+                                        @RequestPart byte[] licenceImageFront,
+                                        @RequestPart byte[] licenceImageRear,
                                         @RequestParam String remarks) {
-        return new ResponseEntity("Vehicle", HttpStatus.OK);
+
+        VehicleDTO vehicleDTO = new VehicleDTO();
+        DriverDTO driverDTO = new DriverDTO();
+        ArrayList<byte[]> objects = new ArrayList<>();
+        files.stream().forEach(file -> {
+            try {
+                objects.add(file.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        vehicleDTO.setDriverDTO(driverDTO);
+        vehicleDTO.setId(id);
+        vehicleDTO.setName(vehicleName);
+        vehicleDTO.setFuelType(fuelType);
+        vehicleDTO.setHybrid(isHybrid);
+        vehicleDTO.setPriceFor1Km(priceFor1Km);
+        vehicleDTO.setFuelUsage(fuelUsage);
+        vehicleDTO.setPriceFor100Km(priceFor100Km);
+        vehicleDTO.setSeatCapacity(noOfSeats);
+        vehicleDTO.setVehicleType(vehicleType);
+        vehicleDTO.setCategory(category);
+        vehicleDTO.setTransmission(transmission);
+        vehicleDTO.setImages(objects);
+        driverDTO.setId(did);
+        driverDTO.setName(driverName);
+        driverDTO.setNic(nicNo);
+        driverDTO.setContact(contactNO);
+        driverDTO.setLicenseImageFront(licenceImageFront);
+        driverDTO.setLicenseImageRear(licenceImageRear);
+        driverDTO.setRemarks(remarks);
+
+        try {
+            vehicleService.updateVehicle(vehicleDTO);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (UpdatefailException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.CONFLICT);
+        }
+
     }
 
     @DeleteMapping("/{id:\\d+}")

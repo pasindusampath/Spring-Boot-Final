@@ -8,9 +8,11 @@ import lk.ijse.gdse63.vehicle_micro_service.entity.Driver;
 import lk.ijse.gdse63.vehicle_micro_service.entity.Vehicle;
 import lk.ijse.gdse63.vehicle_micro_service.exception.NotFoundException;
 import lk.ijse.gdse63.vehicle_micro_service.exception.SaveFailException;
+import lk.ijse.gdse63.vehicle_micro_service.exception.UpdatefailException;
 import lk.ijse.gdse63.vehicle_micro_service.repo.DriverRepo;
 import lk.ijse.gdse63.vehicle_micro_service.repo.VehicleRepo;
 import lk.ijse.gdse63.vehicle_micro_service.service.VehicleService;
+import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,8 @@ public class VehicleServiceIMPL implements VehicleService {
     ModelMapper modelMapper;
     Gson gson;
     VehicleRepo vehicleRepo;
-    public VehicleServiceIMPL(DriverRepo driverRepo, VehicleRepo vehicleRepo, ModelMapper modelMapper, Gson gsonr) {
+    public VehicleServiceIMPL(DriverRepo driverRepo, VehicleRepo vehicleRepo,
+                              ModelMapper modelMapper, Gson gsonr) {
         this.driverRepo = driverRepo;
         this.vehicleRepo = vehicleRepo;
         this.modelMapper = modelMapper;
@@ -88,6 +91,54 @@ public class VehicleServiceIMPL implements VehicleService {
         }
     }
 
+    @Override
+    public void updateVehicle(VehicleDTO dto) throws UpdatefailException {
+        try {
+            Vehicle vehicle = modelMapper.map(dto, Vehicle.class);
+            Driver driver = modelMapper.map(dto.getDriverDTO(), Driver.class);
+            Optional<Driver> byId = driverRepo.findById(driver.getId());
+            if (byId.isPresent()){
+                deleteImages(byId);
+                exportImages(dto,driver,vehicle);
+                Driver save = driverRepo.save(driver);
+                vehicle.setDriver(save);
+                vehicleRepo.save(vehicle);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new UpdatefailException("Update Fail",e);
+        }
+    }
+
+    private void deleteImages(Optional<Driver> byId) {
+        if (byId.isPresent()){
+            if (byId.get().getLicenseImageFront() != null) {
+                File file = new File(byId.get().getLicenseImageFront());
+                boolean delete = file.delete();
+                System.out.println("Front " + delete);
+            }
+            if (byId.get().getLicenseImageRear() != null) {
+                File file = new File(byId.get().getLicenseImageRear());
+                boolean delete = file.delete();
+                System.out.println("Rear " + delete);
+            }
+            if (byId.isPresent()){
+                Driver driver = byId.get();
+                String images = driver.getVehicle().getImages();
+                if (images != null){
+                    ArrayList<String> pathList = gson.fromJson(images, new TypeToken<ArrayList<String>>(){}.getType());
+                    for (String path : pathList) {
+                        File file = new File(path);
+                        boolean delete = file.delete();
+                        System.out.println("Images " + delete);
+                    }
+                }
+            }
+        }
+    }
+
+
     public void exportImages(VehicleDTO vehicleDTO, Driver driver, Vehicle vehicle) {
         ArrayList<byte[]> images = vehicleDTO.getImages();
         String dt = LocalDate.now().toString().replace("-", "_") + "__"
@@ -136,8 +187,6 @@ public class VehicleServiceIMPL implements VehicleService {
 
 
     }
-
-
 
     public void importImages(VehicleDTO vehicleDTO, Driver driver, Vehicle vehicle) throws IOException {
         BufferedImage read = ImageIO.read(new File(driver.getLicenseImageFront()));

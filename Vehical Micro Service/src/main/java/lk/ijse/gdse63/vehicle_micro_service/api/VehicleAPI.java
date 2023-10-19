@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 @RestController
@@ -118,6 +119,19 @@ public class VehicleAPI {
     @DeleteMapping("/{id:\\d+}")
     public ResponseEntity deleteVehicle(@PathVariable int id) {
         return new ResponseEntity("Vehicle", HttpStatus.OK);
+    }
+
+    @GetMapping("/{category:^Regular|Mid-level|Luxury|Super Luxury$}")
+    public ResponseEntity getByCategory(@PathVariable String category){
+        try {
+            List<VehicleDTO> list=vehicleService.searchByCategory(category);
+            if (list.isEmpty()){
+                throw new NotFoundException("Vehicle Not Found");
+            }
+            return new ResponseEntity(list,HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
     }
 
 }

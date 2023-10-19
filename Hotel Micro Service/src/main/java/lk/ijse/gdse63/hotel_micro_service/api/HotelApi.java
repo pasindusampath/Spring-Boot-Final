@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class HotelApi {
     }
 
     @PostMapping()
-    public ResponseEntity uploadFiles(@RequestParam("files") MultipartFile[] files,
+    public ResponseEntity uploadFiles(@RequestParam("files") ArrayList<MultipartFile> files,
                                       @RequestParam("name") String name,
                                       @RequestParam("category") String category,
                                       @RequestParam("petAllowed") boolean petAllowed,
@@ -48,6 +49,14 @@ public class HotelApi {
                                       @RequestParam("prices") ArrayList<PricesDTO> prices,
                                       @RequestParam("remarks") String remarks) {
 
+        ArrayList<byte[]> bytes = new ArrayList<>();
+        files.forEach(file -> {
+            try {
+                bytes.add(file.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         HotelDTO hotelDTO = new HotelDTO();
         hotelDTO.setName(name);
         hotelDTO.setCategory(category);
@@ -58,6 +67,7 @@ public class HotelApi {
         hotelDTO.setEmail(email);
         hotelDTO.setPrices(prices);
         hotelDTO.setRemarks(remarks);
+        hotelDTO.setImages(bytes);
 
         return new ResponseEntity(1, HttpStatus.CREATED);
     }

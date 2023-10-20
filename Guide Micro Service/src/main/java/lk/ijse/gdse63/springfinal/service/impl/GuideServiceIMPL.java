@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import lk.ijse.gdse63.springfinal.dto.GuideDTO;
 import lk.ijse.gdse63.springfinal.entity.Guide;
 import lk.ijse.gdse63.springfinal.exception.SaveFailException;
+import lk.ijse.gdse63.springfinal.exception.UpdateFailException;
 import lk.ijse.gdse63.springfinal.repo.GuideRepo;
 import lk.ijse.gdse63.springfinal.service.GuidService;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class GuideServiceIMPL implements GuidService {
@@ -44,8 +46,20 @@ public class GuideServiceIMPL implements GuidService {
     }
 
     @Override
-    public void updateGuide(GuideDTO guideDTO) {
+    public void updateGuide(GuideDTO guideDTO) throws UpdateFailException {
+        try {
+            Optional<Guide> byId = repo.findById(guideDTO.getId());
+            if (byId.isPresent()){
+                deleteImages(byId.get());
+                Guide map = mapper.map(guideDTO, Guide.class);
+                map.setBirthDate(Date.valueOf(guideDTO.getBirthDate()));
+                exportImages(guideDTO, map);
+                repo.save(map);
+            }
 
+        }catch (Exception e){
+            throw new UpdateFailException("Operation Fail", e);
+        }
     }
 
     @Override
@@ -90,4 +104,24 @@ public class GuideServiceIMPL implements GuidService {
             e.printStackTrace();
         }
     }
+
+
+    public void deleteImages(Guide guide) {
+        File file = new File(guide.getGuideIdFront());
+        boolean delete = file.delete();
+        System.out.println("Images " + delete);
+
+        file = new File(guide.getGuideIdRear());
+        delete = file.delete();
+        System.out.println("Images " + delete);
+
+        file = new File(guide.getNicFront());
+        delete = file.delete();
+        System.out.println("Images " + delete);
+
+        file = new File(guide.getNicRear());
+        delete = file.delete();
+        System.out.println("Images " + delete);
+    }
+
 }

@@ -85,7 +85,7 @@ public class HotelApi {
     }
 
     @PutMapping("/{id:\\d+}")
-    public ResponseEntity update(@PathVariable String id,
+    public ResponseEntity update(@PathVariable int id,
                        @RequestParam("files") ArrayList<MultipartFile> files,
                        @RequestParam("name") String name,
                        @RequestParam("category") String category,
@@ -105,6 +105,7 @@ public class HotelApi {
                 e.printStackTrace();
             }
         });
+        hotelDTO.setId(id);
         hotelDTO.setName(name);
         hotelDTO.setCategory(category);
         hotelDTO.setPetAllowed(petAllowed);
@@ -137,8 +138,12 @@ public class HotelApi {
     @GetMapping("/{starRate:^Star-[2-5]$}")
     public ResponseEntity getByStarRate(@PathVariable String starRate){
         int star = Integer.parseInt((starRate.split("-"))[1]);
-        System.out.println(star);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            HotelDTO byStarRate = hotelService.findByStarRate(star);
+            return new ResponseEntity<>(byStarRate, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping

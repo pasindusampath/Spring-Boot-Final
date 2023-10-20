@@ -3,6 +3,7 @@ package lk.ijse.gdse63.springfinal.api;
 
 import lk.ijse.gdse63.springfinal.dto.GuideDTO;
 import lk.ijse.gdse63.springfinal.exception.SaveFailException;
+import lk.ijse.gdse63.springfinal.exception.UpdateFailException;
 import lk.ijse.gdse63.springfinal.service.GuidService;
 import lk.ijse.gdse63.springfinal.service.impl.GuideServiceIMPL;
 import org.springframework.http.HttpStatus;
@@ -92,8 +93,12 @@ public class GuideAPI {
         guideDTO.setNicRear(nicRear);
         guideDTO.setProfilePic(profilePic);
 
-
-        return ResponseEntity.ok(guideDTO);
+        try {
+            service.updateGuide(guideDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (UpdateFailException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
 
     }
 

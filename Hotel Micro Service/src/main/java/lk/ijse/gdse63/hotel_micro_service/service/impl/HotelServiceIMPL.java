@@ -19,6 +19,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -94,6 +95,24 @@ public class HotelServiceIMPL implements HotelService {
         } catch (Exception e) {
             throw new NotFoundException("Error Occurred :(",e);
         }
+    }
+
+    @Override
+    public HotelDTO findByStarRate(int id) throws NotFoundException {
+        try {
+            List<Hotel> byStar = hotelRepo.findByStar(id);
+            if (!byStar.isEmpty()){
+                HotelDTO hotel = modelMapper.map(byStar.get(0), HotelDTO.class);
+                importImages(hotel,byStar.get(0));
+                return hotel;
+            }else {
+                throw new NotFoundException("Hotels Not Found");
+            }
+        } catch (Exception e) {
+            throw new NotFoundException("Not Found",e);
+        }
+
+
     }
 
 

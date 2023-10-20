@@ -17,6 +17,7 @@ public class Hotel {
     private String category;
     private boolean petAllowed;
     private String mapLink;
+    private int star;
     private String address;
     @Column(columnDefinition = "TEXT")
     private String phone;

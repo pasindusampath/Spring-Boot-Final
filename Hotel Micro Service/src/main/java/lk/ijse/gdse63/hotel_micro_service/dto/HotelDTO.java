@@ -14,6 +14,7 @@ public class HotelDTO {
     private int id;
     private String name;
     private String category;
+    private int star;
     private boolean petAllowed;
     private String mapLink;
     private String address;

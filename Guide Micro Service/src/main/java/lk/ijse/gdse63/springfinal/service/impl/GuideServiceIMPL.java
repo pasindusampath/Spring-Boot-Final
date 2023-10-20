@@ -1,8 +1,12 @@
 package lk.ijse.gdse63.springfinal.service.impl;
 
+import com.google.gson.Gson;
 import lk.ijse.gdse63.springfinal.dto.GuideDTO;
 import lk.ijse.gdse63.springfinal.entity.Guide;
+import lk.ijse.gdse63.springfinal.exception.SaveFailException;
+import lk.ijse.gdse63.springfinal.repo.GuideRepo;
 import lk.ijse.gdse63.springfinal.service.GuidService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -11,15 +15,32 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
 @Service
 public class GuideServiceIMPL implements GuidService {
+    ModelMapper mapper;
+    Gson gson;
+    GuideRepo repo;
+    public GuideServiceIMPL(ModelMapper mapper, Gson gson, GuideRepo repo) {
+        this.mapper = mapper;
+        this.gson = gson;
+        this.repo = repo;
+    }
+
     @Override
-    public int saveGuide(GuideDTO guideDTO) {
-        return 0;
+    public int saveGuide(GuideDTO guideDTO) throws SaveFailException {
+        try {
+            Guide map = mapper.map(guideDTO, Guide.class);
+            map.setBirthDate(Date.valueOf(guideDTO.getBirthDate()));
+            exportImages(guideDTO, map);
+            return repo.save(map).getId();
+        }catch (Exception e){
+            throw new SaveFailException("Operation Fail", e);
+        }
     }
 
     @Override

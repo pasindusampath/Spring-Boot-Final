@@ -2,6 +2,7 @@ package lk.ijse.gdse63.springfinal.api;
 
 
 import lk.ijse.gdse63.springfinal.dto.GuideDTO;
+import lk.ijse.gdse63.springfinal.exception.SaveFailException;
 import lk.ijse.gdse63.springfinal.service.GuidService;
 import lk.ijse.gdse63.springfinal.service.impl.GuideServiceIMPL;
 import org.springframework.http.HttpStatus;
@@ -45,10 +46,12 @@ public class GuideAPI {
         guideDTO.setNicFront(nicFront);
         guideDTO.setNicRear(nicRear);
         guideDTO.setProfilePic(profilePic);
-
-
-        return new ResponseEntity<>(1, HttpStatus.CREATED);
-
+        try {
+            int i = service.saveGuide(guideDTO);
+            return new ResponseEntity<>(i, HttpStatus.CREATED);
+        } catch (SaveFailException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 
     @DeleteMapping("/{id:\\d+}")

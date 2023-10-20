@@ -98,13 +98,17 @@ public class HotelServiceIMPL implements HotelService {
     }
 
     @Override
-    public HotelDTO findByStarRate(int id) throws NotFoundException {
+    public List<HotelDTO> findByStarRate(int id) throws NotFoundException {
         try {
             List<Hotel> byStar = hotelRepo.findByStar(id);
             if (!byStar.isEmpty()){
-                HotelDTO hotel = modelMapper.map(byStar.get(0), HotelDTO.class);
-                importImages(hotel,byStar.get(0));
-                return hotel;
+                List<HotelDTO> hotelDTOS = new ArrayList<>();
+                for (Hotel hotel : byStar) {
+                    HotelDTO hotelDTO = modelMapper.map(hotel, HotelDTO.class);
+                    importImages(hotelDTO,hotel);
+                    hotelDTOS.add(hotelDTO);
+                }
+                return hotelDTOS;
             }else {
                 throw new NotFoundException("Hotels Not Found");
             }

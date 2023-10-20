@@ -15,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 @RestController
@@ -143,7 +140,7 @@ public class HotelApi {
     public ResponseEntity getByStarRate(@PathVariable String starRate){
         int star = Integer.parseInt((starRate.split("-"))[1]);
         try {
-            HotelDTO byStarRate = hotelService.findByStarRate(star);
+            List<HotelDTO> byStarRate = hotelService.findByStarRate(star);
             return new ResponseEntity<>(byStarRate, HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

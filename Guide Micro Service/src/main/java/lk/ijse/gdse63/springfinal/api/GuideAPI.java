@@ -25,17 +25,20 @@ public class GuideAPI {
                                     @RequestPart("nicRear") byte[] nicRear,
                                     @RequestPart("profilePic") byte[] profilePic) {
 
-        System.out.println("Name : "+name);
-        System.out.println("Address : "+address);
-        System.out.println("Contact : "+contact);
-        System.out.println("Birth Date : "+birthDate);
-        System.out.println("Man Day Value : "+manDayValue);
-        System.out.println("Experience : "+experience);
-        System.out.println("Guide Id Front : "+guideIdFront);
-        System.out.println("Guide Id Rear : "+guideIdRear);
-        System.out.println("NIC Front : "+nicFront);
-        System.out.println("NIC Rear : "+nicRear);
-        System.out.println("Profile Pic : "+profilePic);
+        GuideDTO guideDTO = new GuideDTO();
+        guideDTO.setName(name);
+        guideDTO.setAddress(address);
+        guideDTO.setContact(contact);
+        guideDTO.setBirthDate(birthDate);
+        guideDTO.setManDayValue(manDayValue);
+        guideDTO.setExperience(experience);
+        guideDTO.setGuideIdFront(guideIdFront);
+        guideDTO.setGuideIdRear(guideIdRear);
+        guideDTO.setNicFront(nicFront);
+        guideDTO.setNicRear(nicRear);
+        guideDTO.setProfilePic(profilePic);
+
+
 
         return new ResponseEntity<>(1, HttpStatus.CREATED);
 

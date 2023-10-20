@@ -48,6 +48,7 @@ public class HotelApi {
                                       @RequestParam("petAllowed") boolean petAllowed,
                                       @RequestParam("mapLink") String mapLink,
                                       @RequestParam("address") String address,
+                                      @RequestParam("star") int star,
                                       @RequestParam("phone") ArrayList<String> phone,
                                       @RequestParam("email") String email,
                                       @RequestParam("prices") ArrayList<PricesDTO> prices,
@@ -63,6 +64,7 @@ public class HotelApi {
         });
         HotelDTO hotelDTO = new HotelDTO();
         hotelDTO.setName(name);
+        hotelDTO.setStar(star);
         hotelDTO.setCategory(category);
         hotelDTO.setPetAllowed(petAllowed);
         hotelDTO.setMapLink(mapLink);
@@ -89,6 +91,7 @@ public class HotelApi {
                        @RequestParam("files") ArrayList<MultipartFile> files,
                        @RequestParam("name") String name,
                        @RequestParam("category") String category,
+                       @RequestParam("star") int star,
                        @RequestParam("petAllowed") boolean petAllowed,
                        @RequestParam("mapLink") String mapLink,
                        @RequestParam("address") String address,
@@ -108,6 +111,7 @@ public class HotelApi {
         hotelDTO.setId(id);
         hotelDTO.setName(name);
         hotelDTO.setCategory(category);
+        hotelDTO.setStar(star);
         hotelDTO.setPetAllowed(petAllowed);
         hotelDTO.setMapLink(mapLink);
         hotelDTO.setAddress(address);

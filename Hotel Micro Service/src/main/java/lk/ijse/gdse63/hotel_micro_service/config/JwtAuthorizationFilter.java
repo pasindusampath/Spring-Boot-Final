@@ -49,8 +49,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 String email = claims.getSubject();
                 ArrayList<String> o = (ArrayList<String>) claims.get("roles");
                 boolean admin = o.contains("Hotel_Admin");
-
-
                 if (admin) {
                     Authentication authentication =
                             new UsernamePasswordAuthenticationToken(email,"",new ArrayList<>());

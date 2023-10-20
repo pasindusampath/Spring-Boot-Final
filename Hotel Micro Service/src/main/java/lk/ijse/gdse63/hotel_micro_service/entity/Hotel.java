@@ -1,8 +1,6 @@
 package lk.ijse.gdse63.hotel_micro_service.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Hotel {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String category;

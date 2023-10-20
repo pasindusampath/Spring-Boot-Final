@@ -2,6 +2,8 @@ package lk.ijse.gdse63.hotel_micro_service.api;
 
 import lk.ijse.gdse63.hotel_micro_service.dto.HotelDTO;
 import lk.ijse.gdse63.hotel_micro_service.dto.PricesDTO;
+import lk.ijse.gdse63.hotel_micro_service.exception.NotFoundException;
+import lk.ijse.gdse63.hotel_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.hotel_micro_service.service.HotelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,21 +30,13 @@ public class HotelApi {
     }
 
     @GetMapping("{hotelId:\\d+}")
-    public void getHotel(@PathVariable int hotelId){
-        HotelDTO hotelDTO = new HotelDTO();
-        hotelDTO.setId(hotelId);
-        hotelDTO.setName("Hotel 1");
-        hotelDTO.setCategory("Hotel");
-        hotelDTO.setPetAllowed(true);
-        hotelDTO.setMapLink("www.google.com");
-        hotelDTO.setAddress("Colombo");
-        ArrayList<String> objects = new ArrayList<>();
-        Stream.of("0771234567","0771234568").forEach(objects::add);
-        hotelDTO.setPhone(objects);
-        hotelDTO.setEmail("M5Rq7@example.com");
-        hotelDTO.setPrices(new ArrayList<>());
-        hotelDTO.setRemarks("Good");
-        System.out.println("Get Mapping");
+    public ResponseEntity getHotel(@PathVariable int hotelId){
+        try {
+            HotelDTO search = hotelService.search(hotelId);
+            return ResponseEntity.ok(search);
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping()
@@ -77,7 +71,15 @@ public class HotelApi {
         hotelDTO.setRemarks(remarks);
         hotelDTO.setImages(bytes);
 
-        return new ResponseEntity(1, HttpStatus.CREATED);
+        try {
+            int save = hotelService.save(hotelDTO);
+            return new ResponseEntity(save, HttpStatus.CREATED);
+        } catch (SaveFailException e) {
+            e.printStackTrace();
+            return new ResponseEntity("Request Fail", HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 
     @PutMapping("/{id:\\d+}")

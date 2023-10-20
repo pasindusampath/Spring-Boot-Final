@@ -4,6 +4,7 @@ import lk.ijse.gdse63.hotel_micro_service.dto.HotelDTO;
 import lk.ijse.gdse63.hotel_micro_service.dto.PricesDTO;
 import lk.ijse.gdse63.hotel_micro_service.exception.NotFoundException;
 import lk.ijse.gdse63.hotel_micro_service.exception.SaveFailException;
+import lk.ijse.gdse63.hotel_micro_service.exception.UpdateFailException;
 import lk.ijse.gdse63.hotel_micro_service.service.HotelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -84,7 +85,7 @@ public class HotelApi {
 
     @PutMapping("/{id:\\d+}")
     public ResponseEntity update(@PathVariable String id,
-                       @RequestParam("files") MultipartFile[] files,
+                       @RequestParam("files") ArrayList<MultipartFile> files,
                        @RequestParam("name") String name,
                        @RequestParam("category") String category,
                        @RequestParam("petAllowed") boolean petAllowed,
@@ -94,9 +95,32 @@ public class HotelApi {
                        @RequestParam("email") String email,
                        @RequestParam("prices") ArrayList<PricesDTO> prices,
                        @RequestParam("remarks") String remarks){
+        HotelDTO hotelDTO = new HotelDTO();
+        ArrayList<byte[]> bytes = new ArrayList<>();
+        files.forEach(file -> {
+            try {
+                bytes.add(file.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        hotelDTO.setName(name);
+        hotelDTO.setCategory(category);
+        hotelDTO.setPetAllowed(petAllowed);
+        hotelDTO.setMapLink(mapLink);
+        hotelDTO.setAddress(address);
+        hotelDTO.setPhone(phone);
+        hotelDTO.setEmail(email);
+        hotelDTO.setPrices(prices);
+        hotelDTO.setRemarks(remarks);
+        hotelDTO.setImages(bytes);
+        try {
+            hotelService.update(hotelDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (UpdateFailException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id:\\d+}")

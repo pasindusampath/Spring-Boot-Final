@@ -1,4 +1,6 @@
 package lk.ijse.gdse63.springfinal.service.impl;
 
-public class GuideServiceIMPL {
+import lk.ijse.gdse63.springfinal.service.GuidService;
+
+public class GuideServiceIMPL implements GuidService {
 }

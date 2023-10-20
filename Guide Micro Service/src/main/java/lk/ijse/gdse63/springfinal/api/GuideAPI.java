@@ -3,6 +3,7 @@ package lk.ijse.gdse63.springfinal.api;
 
 import lk.ijse.gdse63.springfinal.dto.GuideDTO;
 import lk.ijse.gdse63.springfinal.exception.SaveFailException;
+import lk.ijse.gdse63.springfinal.exception.SearchFailException;
 import lk.ijse.gdse63.springfinal.exception.UpdateFailException;
 import lk.ijse.gdse63.springfinal.service.GuidService;
 import lk.ijse.gdse63.springfinal.service.impl.GuideServiceIMPL;
@@ -104,21 +105,14 @@ public class GuideAPI {
 
     @GetMapping("/{id:\\d+}")
     public ResponseEntity getGuide(@PathVariable int id) {
-        GuideDTO guideDTO = new GuideDTO();
-        guideDTO.setId(id);
-        guideDTO.setName("Test");
-        guideDTO.setAddress("Test");
-        guideDTO.setContact("Test");
-        guideDTO.setBirthDate(LocalDate.now());
-        guideDTO.setManDayValue(1);
-        guideDTO.setExperience("Test");
-        guideDTO.setGuideIdFront(new byte[]{1,2,3});
-        guideDTO.setGuideIdRear(new byte[]{1,2,3});
-        guideDTO.setNicFront(new byte[]{1,2,3});
-        guideDTO.setNicRear(new byte[]{1,2,3});
-        guideDTO.setProfilePic(new byte[]{1,2,3});
 
-        return ResponseEntity.ok(guideDTO);
+        try {
+            GuideDTO guide = service.getGuide(id);
+            return new ResponseEntity<>(guide, HttpStatus.OK);
+        } catch (SearchFailException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+
     }
 
 }

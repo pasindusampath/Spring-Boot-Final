@@ -17,7 +17,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="User_Micro_Service" options="-parameters" />
-      <module name="authenticate_micro_service" options="" />
+      <module name="authenticate_micro_service" options="-parameters" />
       <module name="guide_micro_service" options="-parameters" />
       <module name="hotel_micro_service" options="-parameters" />
       <module name="vehicle_micro_service" options="-parameters" />

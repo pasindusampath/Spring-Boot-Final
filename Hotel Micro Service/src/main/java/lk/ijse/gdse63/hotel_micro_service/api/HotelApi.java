@@ -2,6 +2,7 @@ package lk.ijse.gdse63.hotel_micro_service.api;
 
 import lk.ijse.gdse63.hotel_micro_service.dto.HotelDTO;
 import lk.ijse.gdse63.hotel_micro_service.dto.PricesDTO;
+import lk.ijse.gdse63.hotel_micro_service.service.HotelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,13 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("api/v1/hotel")
 public class HotelApi {
+
+    private HotelService hotelService;
+
+    public HotelApi(HotelService hotelService){
+        this.hotelService = hotelService;
+    }
+
     @GetMapping("{hotelId:\\d+}")
     public void getHotel(@PathVariable int hotelId){
         HotelDTO hotelDTO = new HotelDTO();

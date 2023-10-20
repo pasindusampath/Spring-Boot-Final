@@ -2,6 +2,7 @@ package lk.ijse.gdse63.hotel_micro_service.api;
 
 import lk.ijse.gdse63.hotel_micro_service.dto.HotelDTO;
 import lk.ijse.gdse63.hotel_micro_service.dto.PricesDTO;
+import lk.ijse.gdse63.hotel_micro_service.exception.DeleteFailException;
 import lk.ijse.gdse63.hotel_micro_service.exception.NotFoundException;
 import lk.ijse.gdse63.hotel_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.hotel_micro_service.exception.UpdateFailException;
@@ -124,9 +125,13 @@ public class HotelApi {
     }
 
     @DeleteMapping("/{id:\\d+}")
-    public ResponseEntity delete(@PathVariable String id){
-        System.out.println(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity delete(@PathVariable int id){
+        try {
+            hotelService.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (DeleteFailException | NotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{starRate:^Star-[2-5]$}")

@@ -56,7 +56,12 @@ public class GuideAPI {
 
     @DeleteMapping("/{id:\\d+}")
     public ResponseEntity deleteGuide(@PathVariable int id) {
-        return ResponseEntity.ok(1);
+        try {
+            service.deleteGuide(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 
     @PutMapping("/{id:\\d+}")

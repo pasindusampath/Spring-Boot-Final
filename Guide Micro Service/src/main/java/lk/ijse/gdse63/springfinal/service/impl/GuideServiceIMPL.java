@@ -114,6 +114,12 @@ public class GuideServiceIMPL implements GuidService {
             ImageIO.write(bi, "jpg", outputfile);
             guide.setNicRear(outputfile.getAbsolutePath());
 
+            is = new ByteArrayInputStream(guideDTO.getProfilePic());
+            bi = ImageIO.read(is);
+            outputfile = new File("images/guide/profile/" + dt + "_" + ".jpg");
+            ImageIO.write(bi, "jpg", outputfile);
+            guide.setProfilePic(outputfile.getAbsolutePath());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -145,6 +151,13 @@ public class GuideServiceIMPL implements GuidService {
             imgData= b.toByteArray();
             guideDTO.setNicRear(imgData);
 
+            r = ImageIO.read(new File(guide.getProfilePic()));
+            b = new ByteArrayOutputStream();
+            ImageIO.write(r, "jpg", b);
+            imgData= b.toByteArray();
+            guideDTO.setProfilePic(imgData);
+
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -168,6 +181,11 @@ public class GuideServiceIMPL implements GuidService {
         file = new File(guide.getNicRear());
         delete = file.delete();
         System.out.println("Images " + delete);
+
+        file = new File(guide.getProfilePic());
+        delete = file.delete();
+        System.out.println("Images " + delete);
+
     }
 
 }

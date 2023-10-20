@@ -3,9 +3,7 @@ package lk.ijse.gdse63.springfinal.service.impl;
 import com.google.gson.Gson;
 import lk.ijse.gdse63.springfinal.dto.GuideDTO;
 import lk.ijse.gdse63.springfinal.entity.Guide;
-import lk.ijse.gdse63.springfinal.exception.DeleteFailException;
-import lk.ijse.gdse63.springfinal.exception.SaveFailException;
-import lk.ijse.gdse63.springfinal.exception.UpdateFailException;
+import lk.ijse.gdse63.springfinal.exception.*;
 import lk.ijse.gdse63.springfinal.repo.GuideRepo;
 import lk.ijse.gdse63.springfinal.service.GuidService;
 import org.modelmapper.ModelMapper;
@@ -13,10 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -76,8 +71,19 @@ public class GuideServiceIMPL implements GuidService {
     }
 
     @Override
-    public GuideDTO getGuide(int id) {
-        return null;
+    public GuideDTO getGuide(int id) throws SearchFailException{
+        try {
+            Optional<Guide> byId = repo.findById(id);
+            if (byId.isPresent()){
+                GuideDTO guide = mapper.map(byId.get(), GuideDTO.class);
+                guide.setBirthDate(byId.get().getBirthDate().toLocalDate());
+                importImages(guide,byId.get());
+                return guide;
+            }
+            throw new NotFoundException("Not Found");
+        }catch (Exception e){
+            throw new SearchFailException("Operation Fail", e);
+        }
     }
 
     public void exportImages(GuideDTO guideDTO, Guide guide) {
@@ -113,6 +119,38 @@ public class GuideServiceIMPL implements GuidService {
         }
     }
 
+    public void importImages(GuideDTO guideDTO, Guide guide) {
+        try {
+            BufferedImage r = ImageIO.read(new File(guide.getGuideIdFront()));
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            ImageIO.write(r, "jpg", b);
+            byte[] imgData= b.toByteArray();
+            guideDTO.setGuideIdFront(imgData);
+
+            r = ImageIO.read(new File(guide.getGuideIdRear()));
+            b = new ByteArrayOutputStream();
+            ImageIO.write(r, "jpg", b);
+            imgData= b.toByteArray();
+            guideDTO.setGuideIdRear(imgData);
+
+            r = ImageIO.read(new File(guide.getNicFront()));
+            b = new ByteArrayOutputStream();
+            ImageIO.write(r, "jpg", b);
+            imgData= b.toByteArray();
+            guideDTO.setNicFront(imgData);
+
+            r = ImageIO.read(new File(guide.getNicRear()));
+            b = new ByteArrayOutputStream();
+            ImageIO.write(r, "jpg", b);
+            imgData= b.toByteArray();
+            guideDTO.setNicRear(imgData);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public void deleteImages(Guide guide) {
         File file = new File(guide.getGuideIdFront());

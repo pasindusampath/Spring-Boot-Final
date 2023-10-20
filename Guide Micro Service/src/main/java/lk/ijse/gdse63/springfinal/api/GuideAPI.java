@@ -2,6 +2,8 @@ package lk.ijse.gdse63.springfinal.api;
 
 
 import lk.ijse.gdse63.springfinal.dto.GuideDTO;
+import lk.ijse.gdse63.springfinal.service.GuidService;
+import lk.ijse.gdse63.springfinal.service.impl.GuideServiceIMPL;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,12 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/v1/guide")
 public class GuideAPI {
+
+    GuidService service;
+
+    public GuideAPI(GuidService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ResponseEntity saveGuide(@RequestParam("name")String name,
@@ -37,7 +45,6 @@ public class GuideAPI {
         guideDTO.setNicFront(nicFront);
         guideDTO.setNicRear(nicRear);
         guideDTO.setProfilePic(profilePic);
-
 
 
         return new ResponseEntity<>(1, HttpStatus.CREATED);

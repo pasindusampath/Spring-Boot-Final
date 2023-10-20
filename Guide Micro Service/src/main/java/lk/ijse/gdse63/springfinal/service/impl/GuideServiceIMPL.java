@@ -3,6 +3,7 @@ package lk.ijse.gdse63.springfinal.service.impl;
 import com.google.gson.Gson;
 import lk.ijse.gdse63.springfinal.dto.GuideDTO;
 import lk.ijse.gdse63.springfinal.entity.Guide;
+import lk.ijse.gdse63.springfinal.exception.DeleteFailException;
 import lk.ijse.gdse63.springfinal.exception.SaveFailException;
 import lk.ijse.gdse63.springfinal.exception.UpdateFailException;
 import lk.ijse.gdse63.springfinal.repo.GuideRepo;
@@ -63,7 +64,14 @@ public class GuideServiceIMPL implements GuidService {
     }
 
     @Override
-    public void deleteGuide(int id) {
+    public void deleteGuide(int id) throws DeleteFailException {
+        try {
+            repo.findById(id).ifPresent(this::deleteImages);
+            repo.deleteById(id);
+
+        }catch (Exception e){
+            throw new DeleteFailException("Operation Fail", e);
+        }
 
     }
 

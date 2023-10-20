@@ -51,6 +51,8 @@ public class GuideServiceIMPL implements GuidService {
                 map.setBirthDate(Date.valueOf(guideDTO.getBirthDate()));
                 exportImages(guideDTO, map);
                 repo.save(map);
+            }else {
+                throw new NotFoundException("Not Found");
             }
 
         }catch (Exception e){

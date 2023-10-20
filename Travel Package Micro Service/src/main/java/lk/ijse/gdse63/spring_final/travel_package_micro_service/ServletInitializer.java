@@ -1,4 +1,4 @@
-package lk.ijse.gdse63;
+package lk.ijse.gdse63.spring_final.travel_package_micro_service;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

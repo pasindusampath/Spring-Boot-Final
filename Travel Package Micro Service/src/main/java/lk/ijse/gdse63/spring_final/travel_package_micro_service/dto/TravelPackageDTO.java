@@ -13,4 +13,5 @@ public class TravelPackageDTO {
     private int areaCount;
     private double estimatedPrice;
     private String category;
+    private int dayCount;
 }

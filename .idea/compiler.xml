@@ -6,16 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="travel_package_micr_service" />
         <module name="vehicle_micro_service" />
         <module name="authenticate_micro_service" />
         <module name="guide_micro_service" />
+        <module name="travel_package_micro_service" />
         <module name="User_Micro_Service" />
         <module name="hotel_micro_service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="travel_package_micro_service" target="17" />
+      <module name="travel_package_micr_service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -25,6 +25,7 @@
       <module name="guide_micro_service" options="-parameters" />
       <module name="hotel_micro_service" options="-parameters" />
       <module name="travel_package_micr_service" options="-parameters" />
+      <module name="travel_package_micro_service" options="-parameters" />
       <module name="vehicle_micro_service" options="-parameters" />
     </option>
   </component>

@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>lk.ijse.gdse63.final</groupId>
-    <artifactId>travel_package_micr_service</artifactId>
+    <artifactId>travel_package_micro_service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Travel Package Micro Service</name>

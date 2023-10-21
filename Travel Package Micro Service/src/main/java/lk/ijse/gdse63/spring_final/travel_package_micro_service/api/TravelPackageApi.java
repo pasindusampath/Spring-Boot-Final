@@ -14,21 +14,31 @@ public class TravelPackageApi {
     }
     @PostMapping
     public ResponseEntity save(@RequestBody TravelPackageDTO obj){
-        return ResponseEntity.ok().build();
+        String save = service.save(obj);
+        return ResponseEntity.ok(save);
     }
 
-    @GetMapping
-    public ResponseEntity get(){
-        return ResponseEntity.ok().build();
+    @GetMapping("/{id:^NEXT-\\d{4}$}")
+    public ResponseEntity get(@PathVariable String id){
+        TravelPackageDTO travelPackageDTO = new TravelPackageDTO();
+        travelPackageDTO.setId(id);
+        travelPackageDTO.setHotelCount(2);
+        travelPackageDTO.setAreaCount(3);
+        travelPackageDTO.setEstimatedPrice(4);
+        travelPackageDTO.setCategory("5");
+        travelPackageDTO.setDayCount(6);
+        return ResponseEntity.ok(travelPackageDTO);
     }
 
     @PutMapping
-    public ResponseEntity update(){
+    public ResponseEntity update(@RequestBody TravelPackageDTO obj){
+        service.update(obj);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
-    public ResponseEntity delete(){
+    @DeleteMapping("/{id:^NEXT-\\d{4}$}")
+    public ResponseEntity delete(@PathVariable String id){
+        service.delete(id);
         return ResponseEntity.ok().build();
     }
 

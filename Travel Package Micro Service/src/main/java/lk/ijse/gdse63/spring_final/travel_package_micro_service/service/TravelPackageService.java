@@ -13,4 +13,7 @@ public interface TravelPackageService {
     void delete(String id);
     List<TravelPackageDTO> getPackagesByCategory(String category);
 
+    TravelPackageDTO fidById(String id);
+
+    List<TravelPackageDTO> findByCategory(String category);
 }

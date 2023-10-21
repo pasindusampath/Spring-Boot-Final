@@ -1,31 +1,61 @@
 package lk.ijse.gdse63.spring_final.travel_package_micro_service.service.impl;
 
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.dto.TravelPackageDTO;
+import lk.ijse.gdse63.spring_final.travel_package_micro_service.entity.TravelPackage;
+import lk.ijse.gdse63.spring_final.travel_package_micro_service.repo.TravelPackageRepo;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.service.TravelPackageService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TravelPackageServiceIMPL implements TravelPackageService {
+    TravelPackageRepo travelPackageRepo ;
+    ModelMapper modelMapper;
+    public TravelPackageServiceIMPL(TravelPackageRepo travelPackageRepo, ModelMapper modelMapper) {
+        this.travelPackageRepo = travelPackageRepo;
+        this.modelMapper=modelMapper;
+    }
     @Override
     public String save(TravelPackageDTO obj) {
-        System.out.println(obj);
-        return "NEXT-0001";
+        TravelPackage map = modelMapper.map(obj, TravelPackage.class);
+        TravelPackage save = travelPackageRepo.save(map);
+        return save.getId();
     }
 
     @Override
     public void update(TravelPackageDTO obj) {
-        System.out.println(obj);
+        TravelPackage map = modelMapper.map(obj, TravelPackage.class);
+        travelPackageRepo.save(map);
     }
 
     @Override
     public void delete(String id) {
-        System.out.println(id);
+        travelPackageRepo.deleteById(id);
     }
 
     @Override
     public List<TravelPackageDTO> getPackagesByCategory(String category) {
         return null;
+    }
+
+    @Override
+    public TravelPackageDTO fidById(String id) {
+        Optional<TravelPackage> byId = travelPackageRepo.findById(id);
+        if (byId.isPresent()){
+            return modelMapper.map(byId.get(), TravelPackageDTO.class);
+        }
+        return null;
+    }
+
+    @Override
+    public List<TravelPackageDTO> findByCategory(String category) {
+        List<TravelPackage> byCategory = travelPackageRepo.findByCategory(category);
+        ArrayList<TravelPackageDTO> list = modelMapper.map(byCategory,new TypeToken<ArrayList<TravelPackageDTO>>(){}.getType());
+        return list;
     }
 }

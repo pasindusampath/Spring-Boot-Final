@@ -1,6 +1,14 @@
 package lk.ijse.gdse63.spring_final.travel_package_micro_service.entity;
 
-public class TravelPackage {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class TravelPackage extends SuperEntity{
+    @Id
     private String id;
     private int hotelCount;
     private int areaCount;

@@ -5,6 +5,8 @@ import lk.ijse.gdse63.spring_final.travel_package_micro_service.service.TravelPa
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/travel-package")
 public class TravelPackageApi {
@@ -20,14 +22,14 @@ public class TravelPackageApi {
 
     @GetMapping("/{id:^NEXT-\\d{4}$}")
     public ResponseEntity get(@PathVariable String id){
-        TravelPackageDTO travelPackageDTO = new TravelPackageDTO();
-        travelPackageDTO.setId(id);
-        travelPackageDTO.setHotelCount(2);
-        travelPackageDTO.setAreaCount(3);
-        travelPackageDTO.setEstimatedPrice(4);
-        travelPackageDTO.setCategory("5");
-        travelPackageDTO.setDayCount(6);
+        TravelPackageDTO travelPackageDTO = service.fidById(id);
         return ResponseEntity.ok(travelPackageDTO);
+    }
+
+    @GetMapping("/{category:^REGULAR|MID-LEVEL|LUXURY|SUPER LUXURY$}")
+    public ResponseEntity getByCategory(@PathVariable String category){
+        List<TravelPackageDTO> list = service.findByCategory(category);
+        return ResponseEntity.ok(list);
     }
 
     @PutMapping

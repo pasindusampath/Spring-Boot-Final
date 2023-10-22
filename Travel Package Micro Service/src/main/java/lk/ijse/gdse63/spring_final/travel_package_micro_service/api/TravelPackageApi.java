@@ -1,7 +1,10 @@
 package lk.ijse.gdse63.spring_final.travel_package_micro_service.api;
 
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.dto.TravelPackageDTO;
+import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.service.TravelPackageService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +19,14 @@ public class TravelPackageApi {
     }
     @PostMapping
     public ResponseEntity save(@RequestBody TravelPackageDTO obj){
-        String save = service.save(obj);
-        return ResponseEntity.ok(save);
+        String save = null;
+        try {
+            save = service.save(obj);
+            return ResponseEntity.ok(save);
+        } catch (SaveFailException e) {
+            return new ResponseEntity("Operation Fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @GetMapping("/{id:^NEXT-\\d{4}$}")

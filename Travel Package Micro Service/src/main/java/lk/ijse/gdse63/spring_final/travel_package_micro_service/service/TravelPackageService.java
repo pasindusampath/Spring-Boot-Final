@@ -16,7 +16,7 @@ public interface TravelPackageService {
     void update(TravelPackageDTO obj) throws UpdateFailException;
     void delete(String id) throws DeleteFailException;
     List<TravelPackageDTO> getPackagesByCategory(String category);
-    TravelPackageDTO fidById(String id);
+    TravelPackageDTO fidById(String id) throws NotFoundException;
     List<TravelPackageDTO> findByCategory(String category) throws NotFoundException;
     String generateNextId();
 }

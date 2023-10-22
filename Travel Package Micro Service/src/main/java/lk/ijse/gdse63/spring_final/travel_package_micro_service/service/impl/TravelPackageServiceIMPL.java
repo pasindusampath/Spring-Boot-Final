@@ -72,12 +72,13 @@ public class TravelPackageServiceIMPL implements TravelPackageService {
     }
 
     @Override
-    public TravelPackageDTO fidById(String id) {
+    public TravelPackageDTO fidById(String id) throws NotFoundException {
         Optional<TravelPackage> byId = travelPackageRepo.findById(id);
         if (byId.isPresent()) {
             return modelMapper.map(byId.get(), TravelPackageDTO.class);
+        }else {
+            throw new NotFoundException("Not Found");
         }
-        return null;
     }
 
     @Override

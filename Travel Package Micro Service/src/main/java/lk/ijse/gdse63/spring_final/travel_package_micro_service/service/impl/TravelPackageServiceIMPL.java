@@ -3,6 +3,7 @@ package lk.ijse.gdse63.spring_final.travel_package_micro_service.service.impl;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.dto.TravelPackageDTO;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.entity.TravelPackage;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.DeleteFailException;
+import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.NotFoundException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.UpdateFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.repo.TravelPackageRepo;
@@ -80,11 +81,19 @@ public class TravelPackageServiceIMPL implements TravelPackageService {
     }
 
     @Override
-    public List<TravelPackageDTO> findByCategory(String category) {
-        List<TravelPackage> byCategory = travelPackageRepo.findByCategory(category);
-        ArrayList<TravelPackageDTO> list = modelMapper.map(byCategory, new TypeToken<ArrayList<TravelPackageDTO>>() {
-        }.getType());
-        return list;
+    public List<TravelPackageDTO> findByCategory(String category) throws NotFoundException {
+        try{
+            List<TravelPackage> byCategory = travelPackageRepo.findByCategory(category);
+            ArrayList<TravelPackageDTO> list = modelMapper.map(byCategory, new TypeToken<ArrayList<TravelPackageDTO>>() {
+            }.getType());
+            if (list.isEmpty()) {
+                throw new NotFoundException("Not Found");
+            }
+            return list;
+        }catch (Exception e){
+            throw new NotFoundException("Not Found",e);
+        }
+
     }
 
     @Override

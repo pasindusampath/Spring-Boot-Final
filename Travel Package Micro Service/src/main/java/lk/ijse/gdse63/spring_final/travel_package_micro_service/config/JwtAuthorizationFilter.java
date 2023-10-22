@@ -43,7 +43,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             Claims claims = jwtUtil.resolveClaims(request);
 
             if(claims != null & jwtUtil.validateClaims(claims)){
-                Integer userId = (Integer) claims.get("userId");
                 String email = claims.getSubject();
                 ArrayList<String> o = (ArrayList<String>) claims.get("roles");
                 boolean admin = o.contains("TP_Admin");

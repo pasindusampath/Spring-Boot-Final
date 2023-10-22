@@ -23,8 +23,7 @@ import java.util.Map;
 
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
-    @Value("${admin.data}")
-    private String adminDataEndPoint;
+
     private final JwtUtil jwtUtil;
     private final ObjectMapper mapper;
 

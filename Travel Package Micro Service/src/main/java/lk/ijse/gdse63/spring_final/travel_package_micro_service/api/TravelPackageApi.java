@@ -1,6 +1,7 @@
 package lk.ijse.gdse63.spring_final.travel_package_micro_service.api;
 
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.dto.TravelPackageDTO;
+import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.DeleteFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.UpdateFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.service.TravelPackageService;
@@ -55,8 +56,13 @@ public class TravelPackageApi {
 
     @DeleteMapping("/{id:^NEXT-\\d{4}$}")
     public ResponseEntity delete(@PathVariable String id){
-        service.delete(id);
-        return ResponseEntity.ok().build();
+        try {
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (DeleteFailException e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 }

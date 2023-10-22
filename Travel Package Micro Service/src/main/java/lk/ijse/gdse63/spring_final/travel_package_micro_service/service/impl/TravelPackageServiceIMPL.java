@@ -3,6 +3,7 @@ package lk.ijse.gdse63.spring_final.travel_package_micro_service.service.impl;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.dto.TravelPackageDTO;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.entity.TravelPackage;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.SaveFailException;
+import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.UpdateFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.repo.TravelPackageRepo;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.service.TravelPackageService;
 import org.modelmapper.ModelMapper;
@@ -43,9 +44,14 @@ public class TravelPackageServiceIMPL implements TravelPackageService {
     }
 
     @Override
-    public void update(TravelPackageDTO obj) {
-        TravelPackage map = modelMapper.map(obj, TravelPackage.class);
-        travelPackageRepo.save(map);
+    public void update(TravelPackageDTO obj) throws UpdateFailException {
+        try{
+            TravelPackage map = modelMapper.map(obj, TravelPackage.class);
+            travelPackageRepo.save(map);
+        }catch (Exception e){
+            throw new UpdateFailException("Operation Fail",e);
+        }
+
     }
 
     @Override

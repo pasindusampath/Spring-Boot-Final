@@ -2,6 +2,7 @@ package lk.ijse.gdse63.spring_final.travel_package_micro_service.service.impl;
 
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.dto.TravelPackageDTO;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.entity.TravelPackage;
+import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.DeleteFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.UpdateFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.repo.TravelPackageRepo;
@@ -55,8 +56,13 @@ public class TravelPackageServiceIMPL implements TravelPackageService {
     }
 
     @Override
-    public void delete(String id) {
-        travelPackageRepo.deleteById(id);
+    public void delete(String id) throws DeleteFailException {
+        try{
+            travelPackageRepo.deleteById(id);
+        }catch (Exception e){
+            throw new DeleteFailException("Operation Fail",e);
+        }
+
     }
 
     @Override

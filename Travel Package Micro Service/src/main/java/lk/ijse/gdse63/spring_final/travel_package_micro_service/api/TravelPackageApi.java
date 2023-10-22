@@ -34,8 +34,12 @@ public class TravelPackageApi {
 
     @GetMapping("/{id:^NEXT-\\d{4}$}")
     public ResponseEntity get(@PathVariable String id){
-        TravelPackageDTO travelPackageDTO = service.fidById(id);
-        return ResponseEntity.ok(travelPackageDTO);
+        try {
+            TravelPackageDTO travelPackageDTO = service.fidById(id);
+            return ResponseEntity.ok(travelPackageDTO);
+        }catch (NotFoundException e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{category:^REGULAR|MID-LEVEL|LUXURY|SUPER LUXURY$}")

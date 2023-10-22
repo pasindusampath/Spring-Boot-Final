@@ -2,6 +2,7 @@ package lk.ijse.gdse63.spring_final.travel_package_micro_service.api;
 
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.dto.TravelPackageDTO;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.SaveFailException;
+import lk.ijse.gdse63.spring_final.travel_package_micro_service.exception.UpdateFailException;
 import lk.ijse.gdse63.spring_final.travel_package_micro_service.service.TravelPackageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -43,8 +44,13 @@ public class TravelPackageApi {
 
     @PutMapping
     public ResponseEntity update(@RequestBody TravelPackageDTO obj){
-        service.update(obj);
-        return ResponseEntity.ok().build();
+        try {
+            service.update(obj);
+            return ResponseEntity.ok().build();
+        } catch (UpdateFailException e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @DeleteMapping("/{id:^NEXT-\\d{4}$}")

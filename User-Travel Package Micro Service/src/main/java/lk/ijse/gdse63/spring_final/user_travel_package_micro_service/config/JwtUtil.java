@@ -1,14 +1,15 @@
-package lk.ijse.gdse63.springfinal.config;
+package lk.ijse.gdse63.spring_final.user_travel_package_micro_service.config;
 
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
-import lk.ijse.gdse63.springfinal.dto.AdminDTO;
-import lk.ijse.gdse63.springfinal.dto.UserDTO;
+
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +72,6 @@ public class JwtUtil {
     private List<String> getRoles(Claims claims) {
         return (List<String>) claims.get("roles");
     }
-
 
 
 }

@@ -2,23 +2,32 @@ package lk.ijse.gdse63.spring_final.user_travel_package_micro_service.api;
 
 
 import lk.ijse.gdse63.spring_final.user_travel_package_micro_service.dto.UserTravelPackageDTO;
+import lk.ijse.gdse63.spring_final.user_travel_package_micro_service.exception.SaveFailException;
+import lk.ijse.gdse63.spring_final.user_travel_package_micro_service.service.UserTravelPackageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/user-travel-package")
 public class UserTravelPackageAPI {
-
+    UserTravelPackageService service;
+    public UserTravelPackageAPI(UserTravelPackageService service){
+        this.service = service;
+    }
     @GetMapping()
     public ResponseEntity get(){
-
         return ResponseEntity.ok().build();
     }
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity post(@RequestBody UserTravelPackageDTO obj){
-        System.out.println(obj);
-        return ResponseEntity.ok().build();
+        try {
+            int save = service.save(obj);
+            return ResponseEntity.ok(save);
+        } catch (SaveFailException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping(consumes = "multipart/form-data")

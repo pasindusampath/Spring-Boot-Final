@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
@@ -12,6 +13,7 @@
         <option value="$PROJECT_DIR$/Vehical Micro Service/pom.xml" />
         <option value="$PROJECT_DIR$/Guide Micro Service/pom.xml" />
         <option value="$PROJECT_DIR$/Travel Package Micro Service/pom.xml" />
+        <option value="$PROJECT_DIR$/User-Travel Package Micro Service/pom.xml" />
       </list>
     </option>
   </component>

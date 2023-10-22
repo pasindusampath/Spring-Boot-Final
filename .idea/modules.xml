@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Project.iml" filepath="$PROJECT_DIR$/Project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/User-Travel Package Micro Service/User-Travel Package Micro Service.iml" filepath="$PROJECT_DIR$/User-Travel Package Micro Service/User-Travel Package Micro Service.iml" />
     </modules>
   </component>
 </project>

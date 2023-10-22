@@ -145,6 +145,8 @@ public class HotelServiceIMPL implements HotelService {
 
     }
 
+
+
     private void deleteImages(Optional<Hotel> byId) {
         if (byId.isPresent()){
             if (byId.isPresent()){

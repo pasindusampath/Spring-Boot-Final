@@ -73,5 +73,17 @@ public class JwtUtil {
     }
 
 
-
+    public String createToken(UserDTO user) {
+        Claims claims = Jwts.claims().setSubject(user.getEmail());
+        claims.put("userName",user.getUsername());
+        claims.put("userPassword",user.getPassword());
+        claims.put("roles",user.getRoles());
+        Date tokenCreateTime = new Date();
+        Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(accessTokenValidity));
+        return Jwts.builder()
+                .setClaims(claims)
+                .setExpiration(tokenValidity)
+                .signWith(SignatureAlgorithm.HS256, secret_key)
+                .compact();
+    }
 }

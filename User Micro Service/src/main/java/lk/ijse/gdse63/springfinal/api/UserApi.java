@@ -67,7 +67,7 @@ public class UserApi {
     }
 
     @PostMapping(value = "/{id:\\d+}", consumes = "multipart/form-data")
-    public ResponseEntity<UserDTO> save(@RequestPart(value = "profilePic",required = false) byte[] profilePic,
+    public ResponseEntity<UserDTO> save(@RequestPart(value = "profilePic") byte[] profilePic,
                                         @RequestPart(value = "userName")String userName,
                                         @RequestPart(value = "password") String password,
                                         @RequestPart(value = "contact") String contact,
@@ -85,7 +85,7 @@ public class UserApi {
             userDTO.setContact(contact);
             userDTO.setEmail(email);
             userDTO.setUsernic(nicNo);
-            //userDTO.setBirthday(birthday);
+            userDTO.setBirthday(LocalDate.parse(birthday));
             userDTO.setGender(gender);
             userDTO.setNicFrontByte(nicFront);
             userDTO.setNicRearByte(nicRear);

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api/v1/login")
+@CrossOrigin
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;

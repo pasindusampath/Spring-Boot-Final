@@ -31,8 +31,6 @@ import java.util.Map;
 
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
-    @Value("${admin.data}")
-    private String adminDataEndPoint;
     private final JwtUtil jwtUtil;
     private final ObjectMapper mapper;
     private UserService service;
@@ -48,6 +46,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         System.out.println("Filtering internal start");
         try {
             String accessToken = jwtUtil.resolveToken(request);
+            System.out.println("token : "+accessToken);
             if (accessToken == null ) {
                 filterChain.doFilter(request, response);
                 return;

@@ -25,6 +25,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class UserServiceImpl implements UserService {
             User byEmail = userRepo.findByEmail(email);
             System.out.println(byEmail);
             UserDTO map = modelMapper.map(byEmail, UserDTO.class);
+            if (byEmail.getBirthday() != null)
             map.setBirthday(byEmail.getBirthday().toLocalDate());
             importImages(byEmail,map);
             //map.setNicImgs(jsonStringToArray(byEmail.getNicImgs()));
@@ -75,11 +77,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUser(UserDTO email) throws UpdateFailException {
         try {
             User user = modelMapper.map(email, User.class);
+            User byEmail = userRepo.findByEmail(email.getEmail());
+            user.setBirthday(Date.valueOf(email.getBirthday()));
+            deleteImages(email,byEmail);
+            exportImages(email,user);
             userRepo.updateUserInfoByEmail(user.getUsername(),user.getPassword(), user.getUsernic(), user.getContact(),
-                    user.getEmail(), user.getBirthday(), user.getGender(), user.getRemarks());
+                    user.getEmail(), user.getBirthday(), user.getGender(), user.getRemarks(), user.getNicFrontImg(),
+                    user.getNicRearImg(),user.getProfilePic());
+
         }catch (Exception e){
             throw new UpdateFailException("Operation Failed",e);
         }
@@ -96,6 +105,18 @@ public class UserServiceImpl implements UserService {
             return save.getId();
         }catch (Exception e){
             throw new CreateFailException("Operation Failed",e);
+        }
+    }
+
+    private void deleteImages(UserDTO userDTO, User byEmail) {
+        if (userDTO.getProfilePicByte()!=null){
+            boolean delete = new File(byEmail.getProfilePic()).delete();
+        }
+        if (userDTO.getNicFrontByte()!=null){
+            boolean delete = new File(byEmail.getNicFrontImg()).delete();
+        }
+        if (userDTO.getNicRearByte()!=null){
+            boolean delete = new File(byEmail.getNicRearImg()).delete();
         }
     }
 
@@ -126,23 +147,30 @@ public class UserServiceImpl implements UserService {
         String dt = LocalDate.now().toString().replace("-", "_") + "__"
                 + LocalTime.now().toString().replace(":", "_");
 
-        InputStream is = new ByteArrayInputStream(userDTO.getProfilePicByte());
-        BufferedImage bi = ImageIO.read(is);
-        File outputfile = new File("images/user/pro_pic/"+dt+ ".jpg");
-        ImageIO.write(bi, "jpg", outputfile);
-        user.setProfilePic(outputfile.getAbsolutePath());
+        if (userDTO.getProfilePicByte() != null){
+            InputStream is = new ByteArrayInputStream(userDTO.getProfilePicByte());
+            BufferedImage bi = ImageIO.read(is);
+            File outputfile = new File("images/user/pro_pic/"+dt+ ".jpg");
+            ImageIO.write(bi, "jpg", outputfile);
+            user.setProfilePic(outputfile.getAbsolutePath());
+        }
 
-        InputStream is1 = new ByteArrayInputStream(userDTO.getNicFrontByte());
-        BufferedImage bi1 = ImageIO.read(is1);
-        File outputfile1 = new File("images/user/nic_front/"+dt+ ".jpg");
-        ImageIO.write(bi1, "jpg", outputfile1);
-        user.setNicFrontImg(outputfile1.getAbsolutePath());
+        if (userDTO.getNicFrontByte() != null){
+            InputStream is1 = new ByteArrayInputStream(userDTO.getNicFrontByte());
+            BufferedImage bi1 = ImageIO.read(is1);
+            File outputfile1 = new File("images/user/nic_front/"+dt+ ".jpg");
+            ImageIO.write(bi1, "jpg", outputfile1);
+            user.setNicFrontImg(outputfile1.getAbsolutePath());
+        }
 
-        InputStream is2 = new ByteArrayInputStream(userDTO.getNicRearByte());
-        BufferedImage bi2 = ImageIO.read(is2);
-        File outputfile2 = new File("images/user/nic_rear/"+dt+ ".jpg");
-        ImageIO.write(bi2, "jpg", outputfile2);
-        user.setNicRearImg(outputfile2.getAbsolutePath());
+        if (userDTO.getNicRearByte() != null){
+            InputStream is2 = new ByteArrayInputStream(userDTO.getNicRearByte());
+            BufferedImage bi2 = ImageIO.read(is2);
+            File outputfile2 = new File("images/user/nic_rear/"+dt+ ".jpg");
+            ImageIO.write(bi2, "jpg", outputfile2);
+            user.setNicRearImg(outputfile2.getAbsolutePath());
+        }
+
     }
 
 

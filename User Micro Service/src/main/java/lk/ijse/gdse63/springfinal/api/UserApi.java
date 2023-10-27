@@ -108,11 +108,32 @@ public class UserApi {
 
 
     @PutMapping(value = "/{id:\\d+}")
-    public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> update(@RequestPart(value = "profilePic" , required = false) byte[] profilePic,
+                                          @RequestPart(value = "userName")String userName,
+                                          @RequestPart(value = "password") String password,
+                                          @RequestPart(value = "contact") String contact,
+                                          @RequestPart(value = "email") String email,
+                                          @RequestPart(value = "birthday") String birthday,
+                                          @RequestPart(value = "nicFront" ,required = false) byte[] nicFront,
+                                          @RequestPart(value = "nicRear" , required = false) byte[] nicRear,
+                                          @RequestPart(value = "gender") String gender,
+                                          @RequestPart(value = "nicNo") String nicNo){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(userName);
+        userDTO.setPassword(password);
+        userDTO.setContact(contact);
+        userDTO.setEmail(email);
+        userDTO.setUsernic(nicNo);
+        userDTO.setBirthday(LocalDate.parse(birthday));
+        userDTO.setGender(gender);
+        userDTO.setNicFrontByte(nicFront);
+        userDTO.setNicRearByte(nicRear);
+        userDTO.setProfilePicByte(profilePic);
         try {
             userService.updateUser(userDTO);
             return new ResponseEntity<>(userDTO,HttpStatus.OK);
         } catch (UpdateFailException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

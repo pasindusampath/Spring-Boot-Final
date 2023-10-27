@@ -59,6 +59,12 @@ public class UserApi {
     public ResponseEntity search(@PathVariable String email){
         try {
             UserDTO userDTO = userService.searchUserByEmail(email);
+            System.out.println(userDTO.getNicFront());
+            System.out.println("------------------------------------------------");
+            System.out.println("------------------------------------------------");
+            System.out.println("------------------------------------------------");
+            System.out.println("------------------------------------------------");
+            System.out.println(userDTO.getNicRear());
             return ResponseEntity.ok(userDTO);
         } catch (UserNotFoundException e) {
             ErrorRes errorResponse = new ErrorRes(HttpStatus.NOT_FOUND, e.getMessage());

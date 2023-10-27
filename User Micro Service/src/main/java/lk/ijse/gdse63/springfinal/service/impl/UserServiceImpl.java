@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
             User byEmail = userRepo.findByEmail(email);
             System.out.println(byEmail);
             UserDTO map = modelMapper.map(byEmail, UserDTO.class);
+            map.setBirthday(byEmail.getBirthday().toLocalDate());
             importImages(byEmail,map);
             //map.setNicImgs(jsonStringToArray(byEmail.getNicImgs()));
             return map;
@@ -152,17 +153,19 @@ public class UserServiceImpl implements UserService {
         byte[] bytes = baos.toByteArray();
         userDTO.setProfilePic(Base64.getEncoder().encodeToString(bytes));
 
-        BufferedImage read1 = ImageIO.read(new File(user.getNicFrontImg()));
-        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
-        ImageIO.write(read1, "jpg", baos1);
-        byte[] bytes1 = baos.toByteArray();
-        userDTO.setNicFrontByte(bytes1);
+        read = ImageIO.read(new File(user.getNicFrontImg()));
+        baos = new ByteArrayOutputStream();
+        ImageIO.write(read, "jpg", baos);
+        bytes = baos.toByteArray();
+        userDTO.setNicFront(Base64.getEncoder().encodeToString(bytes));
+        userDTO.setNicFrontByte(bytes);
 
-        BufferedImage read2 = ImageIO.read(new File(user.getNicRearImg()));
-        ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
-        ImageIO.write(read2, "jpg", baos2);
-        byte[] bytes2 = baos.toByteArray();
-        userDTO.setNicRearByte(bytes2);
+        read = ImageIO.read(new File(user.getNicRearImg()));
+        baos = new ByteArrayOutputStream();
+        ImageIO.write(read, "jpg", baos);
+        bytes = baos.toByteArray();
+        userDTO.setNicRear(Base64.getEncoder().encodeToString(bytes));
+        userDTO.setNicRearByte(bytes);
     }
 
 }

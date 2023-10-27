@@ -156,13 +156,13 @@ public class UserServiceImpl implements UserService {
         ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
         ImageIO.write(read1, "jpg", baos1);
         byte[] bytes1 = baos.toByteArray();
-        userDTO.setProfilePic(Base64.getEncoder().encodeToString(bytes1));
+        userDTO.setNicFrontByte(bytes1);
 
         BufferedImage read2 = ImageIO.read(new File(user.getNicRearImg()));
         ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
         ImageIO.write(read2, "jpg", baos2);
         byte[] bytes2 = baos.toByteArray();
-        userDTO.setProfilePic(Base64.getEncoder().encodeToString(bytes2));
+        userDTO.setNicRearByte(bytes2);
     }
 
 }

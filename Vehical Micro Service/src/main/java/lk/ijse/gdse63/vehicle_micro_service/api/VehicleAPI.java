@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/v1/vehicle")
+@CrossOrigin
 public class VehicleAPI {
     VehicleService vehicleService;
 

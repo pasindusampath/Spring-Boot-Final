@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("api/v1/hotel")
+@CrossOrigin
 public class HotelApi {
 
     private HotelService hotelService;
@@ -41,7 +42,7 @@ public class HotelApi {
     @PostMapping()
     public ResponseEntity uploadFiles(@RequestParam("files") ArrayList<MultipartFile> files,
                                       @RequestParam("name") String name,
-                                      @RequestParam("category") String category,
+                                      @RequestParam(name = "category",required = false) String category,
                                       @RequestParam("petAllowed") boolean petAllowed,
                                       @RequestParam("mapLink") String mapLink,
                                       @RequestParam("address") String address,

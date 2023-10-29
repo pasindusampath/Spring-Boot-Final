@@ -22,6 +22,7 @@ public class VehicleDTO {
     private String vehicleType;
     private String category;
     private String transmission;
+    private ArrayList<Integer> removed;
 
     private DriverDTO driverDTO;
 }

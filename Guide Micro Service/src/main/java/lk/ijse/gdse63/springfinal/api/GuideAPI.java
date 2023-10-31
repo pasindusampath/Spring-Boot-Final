@@ -15,6 +15,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/guide")
+@CrossOrigin
 public class GuideAPI {
 
     GuidService service;

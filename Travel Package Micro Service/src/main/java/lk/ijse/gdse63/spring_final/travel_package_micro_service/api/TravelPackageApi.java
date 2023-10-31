@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/travel-package")
+@CrossOrigin
 public class TravelPackageApi {
     TravelPackageService service;
     public TravelPackageApi(TravelPackageService service){
@@ -32,7 +33,7 @@ public class TravelPackageApi {
 
     }
 
-    @GetMapping("/{id:^NEXT-\\d{4}$}")
+    @GetMapping("/{id:^NEXT-\\d{5}$}")
     public ResponseEntity get(@PathVariable String id){
         try {
             TravelPackageDTO travelPackageDTO = service.fidById(id);
@@ -64,7 +65,7 @@ public class TravelPackageApi {
 
     }
 
-    @DeleteMapping("/{id:^NEXT-\\d{4}$}")
+    @DeleteMapping("/{id:^NEXT-\\d{5}$}")
     public ResponseEntity delete(@PathVariable String id){
         try {
             service.delete(id);

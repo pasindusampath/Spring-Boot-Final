@@ -43,7 +43,7 @@ public class UserApi {
             String email = authentication.getName();
             UserDTO user = userService.searchUserByEmail(email);
             String token = jwtUtil.createToken(user);
-            LoginRes loginRes = new LoginRes(email,token);
+            LoginRes loginRes = new LoginRes(email,token, user.getId());
             return ResponseEntity.ok(loginRes);
 
         }catch (BadCredentialsException e){

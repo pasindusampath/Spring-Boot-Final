@@ -42,7 +42,7 @@ public class AuthController {
             String email = authentication.getName();
             AdminDTO user = adminServiceImpl.searchUser(email);
             String token = jwtUtil.createToken(user);
-            LoginRes loginRes = new LoginRes(email,token);
+            LoginRes loginRes = new LoginRes(email,token,user.getType());
             return ResponseEntity.ok(loginRes);
 
         }catch (BadCredentialsException e){

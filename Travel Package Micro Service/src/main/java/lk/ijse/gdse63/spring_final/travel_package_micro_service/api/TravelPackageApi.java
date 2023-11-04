@@ -54,6 +54,16 @@ public class TravelPackageApi {
 
     }
 
+    @GetMapping()
+    public ResponseEntity getAll(){
+        try {
+            List<TravelPackageDTO> list  = service.getAll();
+            return ResponseEntity.ok(list);
+        } catch (NotFoundException e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PutMapping
     public ResponseEntity update(@RequestBody TravelPackageDTO obj){
         try {

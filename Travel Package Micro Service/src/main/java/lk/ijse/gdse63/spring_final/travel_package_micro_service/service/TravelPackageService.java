@@ -19,4 +19,6 @@ public interface TravelPackageService {
     TravelPackageDTO fidById(String id) throws NotFoundException;
     List<TravelPackageDTO> findByCategory(String category) throws NotFoundException;
     String generateNextId();
+
+    List<TravelPackageDTO> getAll() throws NotFoundException;
 }

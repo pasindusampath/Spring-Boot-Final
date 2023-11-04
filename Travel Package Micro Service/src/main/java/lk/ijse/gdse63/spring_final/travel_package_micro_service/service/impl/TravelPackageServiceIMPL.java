@@ -110,4 +110,19 @@ public class TravelPackageServiceIMPL implements TravelPackageService {
         return String.format("NEXT-%05d", numarical.last() + 1);
 
     }
+
+    @Override
+    public List<TravelPackageDTO> getAll() throws NotFoundException {
+        try{
+            List<TravelPackage> all = travelPackageRepo.findAll();
+            ArrayList<TravelPackageDTO> list = modelMapper.map(all, new TypeToken<ArrayList<TravelPackageDTO>>() {
+            }.getType());
+            if (list.isEmpty()) {
+                throw new NotFoundException("Not Found");
+            }
+            return list;
+        }catch (Exception e){
+            throw new NotFoundException("Not Found",e);
+        }
+    }
 }

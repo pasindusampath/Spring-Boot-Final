@@ -144,6 +144,7 @@ public class HotelApi {
             List<HotelDTO> byStarRate = hotelService.findByStarRate(star);
             return new ResponseEntity<>(byStarRate, HttpStatus.OK);
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

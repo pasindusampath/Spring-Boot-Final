@@ -1,6 +1,7 @@
 package lk.ijse.gdse63.spring_final.user_travel_package_micro_service.api;
 
 
+import lk.ijse.gdse63.spring_final.user_travel_package_micro_service.dto.PaymentDTO;
 import lk.ijse.gdse63.spring_final.user_travel_package_micro_service.dto.UserTravelPackageDTO;
 import lk.ijse.gdse63.spring_final.user_travel_package_micro_service.exception.SaveFailException;
 import lk.ijse.gdse63.spring_final.user_travel_package_micro_service.service.UserTravelPackageService;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/user-travel-package")
+@CrossOrigin
 public class UserTravelPackageAPI {
     UserTravelPackageService service;
     public UserTravelPackageAPI(UserTravelPackageService service){
@@ -31,8 +33,15 @@ public class UserTravelPackageAPI {
     }
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity savePaymentData(@RequestParam("value") double price,
+    public ResponseEntity savePaymentData(@RequestParam("id") int id,
+                                          @RequestParam("value") double price,
                                           @RequestPart("paymentSlip") byte[] paymentSlip){
+        PaymentDTO paymentDTO = new PaymentDTO();
+        paymentDTO.setUserTravelPackageId(id);
+        paymentDTO.setPaymentSlip(paymentSlip);
+        paymentDTO.setAmount(price);
+        paymentDTO.setApproved(false);
+        service.savePaymentData(paymentDTO);
         return ResponseEntity.ok().build();
     }
 
